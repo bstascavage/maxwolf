@@ -1,1 +1,14 @@
 /* CSS declarations go here */
+.jumbotron{
+  background-image:url('./yoshi__by_werewolf28081999-d7umjf8.jpg');
+  background-size:100%
+}
+
+.jumbotron h1
+{
+  color:white;
+}
+
+.jumbotron h3{
+  color:white;
+}

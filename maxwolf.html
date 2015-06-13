@@ -2,17 +2,28 @@
   <title>maxwolf</title>
 </head>
 
-<body>
+<body class="container">
+
 
 </body>
 
 <template name="home">
-	<h1>MaxWolf</h1>
-  {{> loginButtons}}
+<div class="row">
+<div class="col-md-12">
+  <div class="jumbotron">
+    <h1>maxwolf</h1>
+    <br/><br/>
+    <h3>A game about wolves</h3>
+    <p>{{> loginButtons}}
+      
+      {{#if currentUser}}
+        {{> startGame}}
+      {{/if}}
+    </p>
+  </div>
+</div>	
   
-  {{#if currentUser}}
-    {{> startGame}}
-  {{/if}}
+</div>
 </template>
 
 <template name="startGame">
@@ -24,26 +35,31 @@
 </template>
 
 <template name="game">
-    <p>You are now playing maxwolf</p>
-    <button class="reset-game-state">Reset game</button>
-    <button class="next-game-state">Next State</button>
-    <p>Your name is: {{currentUser.username}}</p>
-    <p>It is currently day: {{day}}</p>
-    {{#if daytime}}
-      <p>It is currently: daytime</p>
-    {{else}}
-      <p>It is currently: nighttime</p>
-    {{/if}}
-    <p>player list:</p>
-    <ul>
-    {{#each players}}
-      <li>{{username}} [role: {{profile.role}}]
-      {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}}
-      {{#if profile.online}}(online){{/if}} <a href="" class="vote">vote</a> {{voteCount}}
-      </li> 
-    {{/each}}
-    </ul>
-    vote leader: {{voteLeader}}
+<div class="row">
+  <div class="col-md-12">
+      <h1>You are now playing <i>maxwolf</i></h1>
+      <button class="reset-game-state btn btn-default">Reset game</button>
+      <button class="next-game-state btn btn-default">Next State</button>
+      <br/><br/>
+      <p>Your name is: {{currentUser.username}}</p>
+      <p>It is currently day: {{day}}</p>
+      {{#if daytime}}
+        <p>It is currently: daytime</p>
+      {{else}}
+        <p>It is currently: nighttime</p>
+      {{/if}}
+      <p>player list:</p>
+      <ul>
+      {{#each players}}
+        <li>{{username}} [role: {{profile.role}}]
+        {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}}
+        {{#if profile.online}}(online){{/if}} <a href="" class="vote">vote</a> {{voteCount}}
+        </li> 
+      {{/each}}
+      </ul>
+      vote leader: {{voteLeader}}
+  </div>
+</div>
 </template>
 
 <template name="roleList">
