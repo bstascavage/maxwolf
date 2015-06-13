@@ -47,6 +47,27 @@ if (Meteor.isClient) {
     },
     voteCount: function(){
       return Votes.find({votefor: this._id}).count()
+    },
+    voteLeader: function(){
+      var v = [];
+      Meteor.users.find().forEach(function (player){
+        v[player._id.toString()] = Votes.find({
+          votefor: player._id
+        }).count()
+      })
+      console.log(v);
+      leader = null;
+      currentBest = 0;
+      for(var userId in v)
+      {
+        console.log('looping!');
+        if(leader == null || v[userId] > currentBest)
+        {
+          leader = userId;
+          currentBest = v[userId]
+        }
+      }
+      return leader;
     }
   })
   
@@ -101,6 +122,10 @@ if (Meteor.isServer) {
           voteFrom: voteFrom,
           votefor: voteFor
         })
+      },
+      tallyVote:function()
+      {
+        
       }
     })
   })
