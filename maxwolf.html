@@ -26,7 +26,14 @@
 <template name="game">
     <p>You are now playing maxwolf</p>
     <button class="reset-game-state">Reset game</button>
+    <button class="next-game-state">Next State</button>
     <p>Your name is: {{currentUser.username}}</p>
+    <p>It is currently day: {{day}}</p>
+    {{#if daytime}}
+      <p>It is currently: daytime</p>
+    {{else}}
+      <p>It is currently: nighttime</p>
+    {{/if}}
     <p>player list:</p>
     <ul>
     {{#each players}}
