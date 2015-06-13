@@ -44,6 +44,7 @@
     <br/><br/>
     <p>Your name is: {{currentUser.username}}</p>
     <p>You are currently: {{#if currentUser.profile.alive}}alive{{else}}dead{{/if}}</p>
+    <p>Your role is: {{currentUser.profile.role}}</p>
     <p>It is currently day: {{day}}</p>
     {{#if daytime}}
       <p>It is currently: daytime</p>
@@ -57,7 +58,7 @@
       {{#each players}}
         <li>{{username}} [role: {{profile.role}}]
         {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}}
-        {{#if profile.online}}(online){{/if}} {{#if currentUser.profile.alive}}<a href="" class="vote">vote</a>{{/if}} {{voteCount}}
+        {{#if profile.online}}(online){{/if}} {{#if currentUser.profile.alive}}<a href="" class="villageVote">vote</a>{{/if}} {{voteCount}}
         </li> 
       {{/each}}
 
