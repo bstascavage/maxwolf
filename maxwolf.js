@@ -51,25 +51,11 @@ if (Meteor.isClient) {
       return Votes.find({votefor: this._id}).count()
     },
     voteLeader: function(){
-      var v = [];
-      Meteor.users.find().forEach(function (player){
-        v[player._id.toString()] = Votes.find({
-          votefor: player._id
-        }).count()
+      var id = playerIdWithMostVotes();
+      player = Meteor.users.findOne({
+        _id: id
       })
-      console.log(v);
-      leader = null;
-      currentBest = 0;
-      for(var userId in v)
-      {
-        console.log('looping!');
-        if(leader == null || v[userId] > currentBest)
-        {
-          leader = userId;
-          currentBest = v[userId]
-        }
-      }
-      return leader;
+      return player.username;
     },
     day: function(){
       return Gamestate.findOne({}).day
@@ -95,6 +81,28 @@ if (Meteor.isClient) {
       Meteor.call('castVote', Meteor.userId(), this._id);
     }
   })
+
+  function playerIdWithMostVotes()
+  {
+    var v = [];
+    Meteor.users.find().forEach(function (player){
+      v[player._id.toString()] = Votes.find({
+        votefor: player._id
+      }).count()
+    })
+    leader = null;
+    currentBest = 0;
+    for(var userId in v)
+    {
+      console.log('looping!');
+      if((leader == null && v[userId] > 0 ) || v[userId] > currentBest)
+      {
+        leader = userId;
+        currentBest = v[userId]
+      }
+    }
+    return leader;
+  }
 }
 
 if (Meteor.isServer) {
