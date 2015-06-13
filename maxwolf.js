@@ -157,6 +157,7 @@ if (Meteor.isServer) {
               {username: all_users[i].username},
               {$set:
                 {
+                  'profile.alive' : true,
                   'profile.role' : tempRole,
                   'profile.team' : tempTeam
                 }
