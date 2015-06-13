@@ -7,8 +7,8 @@ Meteor.startup(function () {
 	Roles.remove({})
 	Roles.insert({name: "Villager" });
 	Roles.insert({ name: "Werewolf" });
-	Gamestate.insert({ day: 1 });
-	Gamestate.insert({ state: "day" });
+	Gamestate.remove({})
+	Gamestate.insert({ daytime: true, day: 1 });
   });
 
 /****** Routes ******/
@@ -49,7 +49,13 @@ if (Meteor.isClient) {
     },
     voteCount: function(){
       return Votes.find({votefor: this._id}).count()
-    }
+    },
+    day: function(){
+      return Gamestate.findOne({}).day
+    },
+    daytime: function(){
+      return Gamestate.findOne({}).daytime
+    },
   })
   
   Template.game.events({
@@ -58,7 +64,7 @@ if (Meteor.isClient) {
 
       });
     },
-    'click .reset-game-state': function(event) {
+    'click .next-game-state': function(event) {
       Meteor.call('nextGameState',function(err, response) {
 
       });
@@ -99,10 +105,50 @@ if (Meteor.isServer) {
            );
         });
         
+	Gamestate.update(
+          {},
+          {$set:
+            {
+	      daytime: true,
+              day: 1
+            }
+          }
+        )
         //reset votes
         Votes.remove({})
         
         return "whatever";
+      },
+      nextGameState: function()
+      {
+        state = Gamestate.findOne()
+	if (state.daytime) {
+	  Gamestate.update(
+	    {}, 
+	    {$set: 
+	      { 
+		'daytime': false 
+	      } 
+	    }
+	  )
+	} else {
+	  Gamestate.update(
+	    {}, 
+	    {$inc: 
+	      { 
+		day: 1 
+	      } 
+	    }
+	  )
+	  Gamestate.update(
+	    {}, 
+	    {$set: 
+	      {
+		 'daytime': true
+	      }
+	    }
+	  )
+	}
       }
     })
   })
