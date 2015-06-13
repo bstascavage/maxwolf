@@ -56,6 +56,9 @@ if (Meteor.isClient) {
     daytime: function(){
       return Gamestate.findOne({}).daytime
     },
+    isAlive: function(){
+      return currentUser.profile.alive
+    },
   })
   
   Template.game.events({
@@ -72,7 +75,10 @@ if (Meteor.isClient) {
     'click .vote': function(event) {
       console.log(Meteor.userId() + ' is voting for ' + this._id);
       Meteor.call('castVote', Meteor.userId(), this._id);
-    }
+    },
+    'click .suicide': function(event) {
+      Meteor.call('suicide', Meteor.user());
+    },
   })
 }
 
@@ -143,6 +149,11 @@ if (Meteor.isServer) {
 	    }
 	  )
 	}
+      },
+      suicide: function()
+      {
+	Meteor.users.update( { _id: Meteor.userId() }, {$set: { 'profile': { 'alive': false } } } )
+	console.log('TEST')
       },
       castVote:function(voteFrom, voteFor)
       {

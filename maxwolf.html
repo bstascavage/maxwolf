@@ -27,7 +27,9 @@
     <p>You are now playing maxwolf</p>
     <button class="reset-game-state">Reset game</button>
     <button class="next-game-state">Next State</button>
+    <button class="suicide">Kill Yourself</button>
     <p>Your name is: {{currentUser.username}}</p>
+    <p>You are currently: {{#if currentUser.profile.alive}}alive{{else}}dead{{/if}}</p>
     <p>It is currently day: {{day}}</p>
     {{#if daytime}}
       <p>It is currently: daytime</p>
@@ -36,12 +38,22 @@
     {{/if}}
     <p>player list:</p>
     <ul>
+    {{#if currentUser.profile.alive}}
     {{#each players}}
       <li>{{username}} [role: {{profile.role}}]
       {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}}
       {{#if profile.online}}(online){{/if}} <a href="" class="vote">vote</a> {{voteCount}}
       </li> 
     {{/each}}
+    {{else}} 
+    {{#each players}} 
+      <li>{{username}} [role: {{profile.role}}] 
+      {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}} 
+      {{#if profile.online}}(online){{/if}} 
+      </li> 
+    {{/each}} 
+    {{/if}} 
+
     </ul>
 </template>
 
