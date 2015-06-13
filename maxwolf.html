@@ -53,21 +53,13 @@
     <p>You are facing the south side of a white house.  There is no door here, and all the windows are barred.</p>
     <p>player list:</p>
     <ul>
-    {{#if currentUser.profile.alive}}
-    {{#each players}}
-      <li>{{username}} [role: {{profile.role}}]
-      {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}}
-      {{#if profile.online}}(online){{/if}} <a href="" class="vote">vote</a> {{voteCount}}
-      </li> 
-    {{/each}}
-    {{else}} 
-    {{#each players}} 
-      <li>{{username}} [role: {{profile.role}}] 
-      {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}} 
-      {{#if profile.online}}(online){{/if}} 
-      </li> 
-    {{/each}} 
-    {{/if}} 
+
+      {{#each players}}
+        <li>{{username}} [role: {{profile.role}}]
+        {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}}
+        {{#if profile.online}}(online){{/if}} {{#if currentUser.profile.alive}}<a href="" class="vote">vote</a>{{/if}} {{voteCount}}
+        </li> 
+      {{/each}}
 
     </ul>
     vote leader: {{voteLeader}}
