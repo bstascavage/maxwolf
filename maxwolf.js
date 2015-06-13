@@ -193,6 +193,7 @@ if (Meteor.isServer) {
 	  )
 
 	  Meteor.call('murder', playerIdWithMostVotes(), playerIdWithMostVotes());
+	  Votes.remove({})
 	} else {
 	  Gamestate.update(
 	    {}, 
