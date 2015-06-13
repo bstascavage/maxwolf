@@ -7,6 +7,8 @@ Meteor.startup(function () {
 	Roles.remove({})
 	Roles.insert({name: "Villager" });
 	Roles.insert({ name: "Werewolf" });
+	Gamestate.insert({ day: 1 });
+	Gamestate.insert({ state: "day" });
   });
 
 /****** Routes ******/
@@ -53,6 +55,11 @@ if (Meteor.isClient) {
   Template.game.events({
     'click .reset-game-state': function(event) {
       Meteor.call('resetGameState',function(err, response) {
+
+      });
+    },
+    'click .reset-game-state': function(event) {
+      Meteor.call('nextGameState',function(err, response) {
 
       });
     },
