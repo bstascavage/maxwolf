@@ -57,14 +57,8 @@ if (Meteor.isClient) {
       });
     },
     'click .vote': function(event) {
-      console.log('voting for' + this._id);
-      Votes.upsert(
-      {
-        _id: Meteor.user()._id,
-      },
-      {
-        votefor: this._id
-      })
+      console.log(Meteor.userId() + ' is voting for ' + this._id);
+      Meteor.call('castVote', Meteor.userId(), this._id);
     }
   })
 }
@@ -96,6 +90,17 @@ if (Meteor.isServer) {
         Votes.remove({})
         
         return "whatever";
+      },
+      castVote:function(voteFrom, voteFor)
+      {
+        Votes.upsert(
+        {
+          voteFrom: voteFrom,
+        },
+        {
+          voteFrom: voteFrom,
+          votefor: voteFor
+        })
       }
     })
   })
