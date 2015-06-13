@@ -1,6 +1,7 @@
 Roles = new Mongo.Collection("roles");
 Players = new Mongo.Collection("players");
 Gamestate = new Mongo.Collection("gamestate");
+Votes = new Mongo.Collection("votes");
 
 Meteor.startup(function () {
 	Roles.remove({})
@@ -42,8 +43,10 @@ if (Meteor.isClient) {
   /********* GAME *********/
   Template.game.helpers({
     players: function(){
-      console.log(Meteor.user())
       return Meteor.users.find();
+    },
+    voteCount: function(){
+      return Votes.find({votefor: this._id}).count()
     }
   })
   
@@ -52,6 +55,16 @@ if (Meteor.isClient) {
       Meteor.call('resetGameState',function(err, response) {
 
       });
+    },
+    'click .vote': function(event) {
+      console.log('voting for' + this._id);
+      Votes.upsert(
+      {
+        _id: Meteor.user()._id,
+      },
+      {
+        votefor: this._id
+      })
     }
   })
 }
@@ -78,7 +91,9 @@ if (Meteor.isServer) {
             }
            );
         });
-
+        
+        //reset votes
+        Votes.remove({})
         
         return "whatever";
       }

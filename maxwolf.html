@@ -32,7 +32,8 @@
     {{#each players}}
       <li>{{username}} [role: {{profile.role}}]
       {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}}
-      {{#if profile.online}}(online){{/if}}</li>
+      {{#if profile.online}}(online){{/if}} <a href="" class="vote">vote</a> {{voteCount}}
+      </li> 
     {{/each}}
     </ul>
 </template>
