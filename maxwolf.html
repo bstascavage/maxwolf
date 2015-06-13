@@ -50,18 +50,30 @@
     {{else}}
       <p>It is currently: nighttime</p>
     {{/if}}
-    <p>You are facing the south side of a white house.  There is no door here, and all the windows are barred.</p>
-    <p>player list:</p>
-    <ul>
-
-      {{#each players}}
-        <li>{{username}} [role: {{profile.role}}]
-        {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}}
-        {{#if profile.online}}(online){{/if}} {{#if currentUser.profile.alive}}<a href="" class="vote">vote</a>{{/if}} {{voteCount}}
-        </li> 
-      {{/each}}
-
-    </ul>
+  </div>
+  <div class="col-md-6">
+    <table class="table player-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Role</th>
+          <th>Actions</th>
+          <th>Werewolf Actions</th>
+          <th>Vote Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each players}}
+          <tr class="{{#unless profile.alive}}dead{{/unless}}">
+            <td>{{username}}</td>
+            <td>{{profile.role}}</td>
+            <td>{{#if currentUser.profile.alive}}<a href="" class="vote">vote</a>{{/if}}</td>
+            <td></td>
+            <td>{{voteCount}}</td>
+          </tr> 
+        {{/each}}
+      </tbody>
+    </table>
     vote leader: {{voteLeader}}
   </div>
 </div>
