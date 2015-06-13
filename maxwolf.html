@@ -37,27 +37,40 @@
 <template name="game">
 <div class="row">
   <div class="col-md-12">
-      <h1>You are now playing <i>maxwolf</i></h1>
-      <button class="reset-game-state btn btn-default">Reset game</button>
-      <button class="next-game-state btn btn-default">Next State</button>
-      <br/><br/>
-      <p>Your name is: {{currentUser.username}}</p>
-      <p>It is currently day: {{day}}</p>
-      {{#if daytime}}
-        <p>It is currently: daytime</p>
-      {{else}}
-        <p>It is currently: nighttime</p>
-      {{/if}}
-      <p>player list:</p>
-      <ul>
-      {{#each players}}
-        <li>{{username}} [role: {{profile.role}}]
-        {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}}
-        {{#if profile.online}}(online){{/if}} <a href="" class="vote">vote</a> {{voteCount}}
-        </li> 
-      {{/each}}
-      </ul>
-      vote leader: {{voteLeader}}
+    <h1>You are now playing <i>maxwolf</i></h1>
+    <button class="reset-game-state btn btn-default">Reset game</button>
+    <button class="next-game-state btn btn-default">Next State</button>
+    <button class="suicide btn btn-default">Kill Yourself</button>
+    <br/><br/>
+    <p>Your name is: {{currentUser.username}}</p>
+    <p>You are currently: {{#if currentUser.profile.alive}}alive{{else}}dead{{/if}}</p>
+    <p>It is currently day: {{day}}</p>
+    {{#if daytime}}
+      <p>It is currently: daytime</p>
+    {{else}}
+      <p>It is currently: nighttime</p>
+    {{/if}}
+    <p>You are facing the south side of a white house.  There is no door here, and all the windows are barred.</p>
+    <p>player list:</p>
+    <ul>
+    {{#if currentUser.profile.alive}}
+    {{#each players}}
+      <li>{{username}} [role: {{profile.role}}]
+      {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}}
+      {{#if profile.online}}(online){{/if}} <a href="" class="vote">vote</a> {{voteCount}}
+      </li> 
+    {{/each}}
+    {{else}} 
+    {{#each players}} 
+      <li>{{username}} [role: {{profile.role}}] 
+      {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}} 
+      {{#if profile.online}}(online){{/if}} 
+      </li> 
+    {{/each}} 
+    {{/if}} 
+
+    </ul>
+    vote leader: {{voteLeader}}
   </div>
 </div>
 </template>
