@@ -1,12 +1,18 @@
 Roles = new Mongo.Collection("roles");
+Teams = new Mongo.Collection("teams");
 Players = new Mongo.Collection("players");
 Gamestate = new Mongo.Collection("gamestate");
 Votes = new Mongo.Collection("votes");
 
 Meteor.startup(function () {
+  Teams.remove({});
+  Teams.insert({name: "Villagers",  team_proportionality: 2});
+  Teams.insert({name: "Werewolves", team_proportionality: 1});
+
 	Roles.remove({})
-	Roles.insert({name: "Villager" });
-	Roles.insert({ name: "Werewolf" });
+	Roles.insert({name: "Villager", team: "Villagers" , is_default_role: true});
+	Roles.insert({name: "Werewolf", team: "Werewolves", is_default_role: true});
+
 	Gamestate.remove({})
 	Gamestate.insert({ daytime: true, day: 1 });
   });
@@ -115,7 +121,7 @@ if (Meteor.isServer) {
     Meteor.methods({
       resetGameState: function()
       {
-        Meteor.users.find().forEach(function (row) {
+        /*Meteor.users.find().forEach(function (row) {
           Meteor.users.update(
             {_id: row._id},
             {$set:
@@ -124,8 +130,39 @@ if (Meteor.isServer) {
                 'profile.role' : "Role_Goes_here"
               }
             }
-           );
-        });
+          );
+        });*/
+        
+        all_users = Meteor.users.find().fetch();
+
+        //fisher-yates shuffle
+        for(var i = 0; i < all_users.length - 1; i++){
+          j = getRandomIntBetween(i,all_users.length-1);
+          temp = all_users[j];
+          all_users[j] = all_users[i];
+          all_users[i] = temp;
+        }
+
+        //First third of users are werewolves, the rest are villagers
+        var third = Math.floor(all_users.length / 3);
+        for(var i = 0; i < all_users.length; i++){
+          if (i < third) {
+            tempRole = "Werewolf";
+            tempTeam = "Werewolves";
+          } else {
+            tempRole = "Villager";
+            tempTeam = "Villagers";
+          }
+          Meteor.users.update(
+              {username: all_users[i].username},
+              {$set:
+                {
+                  'profile.role' : tempRole,
+                  'profile.team' : tempTeam
+                }
+              }
+          );
+        }
         
 	Gamestate.update(
           {},
@@ -196,3 +233,8 @@ if (Meteor.isServer) {
     })
   })
 };
+
+// Returns a random integer between min and max, inclusive
+function getRandomIntBetween (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
