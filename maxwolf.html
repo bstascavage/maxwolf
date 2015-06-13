@@ -1,0 +1,50 @@
+<head>
+  <title>maxwolf</title>
+</head>
+
+<body>
+
+</body>
+
+<template name="home">
+	<h1>MaxWolf</h1>
+  {{> loginButtons}}
+  
+  {{#if currentUser}}
+    {{> startGame}}
+  {{/if}}
+</template>
+
+<template name="startGame">
+  <br/><br/>
+	<form class="pickname">
+		<!-- Name: <input type="text" name="username"/> -->
+		<button>Join Game</button>
+	</form>
+</template>
+
+<template name="game">
+    <p>You are now playing maxwolf</p>
+    <button class="reset-game-state">Reset game</button>
+    <p>Your name is: {{currentUser.username}}</p>
+    <p>player list:</p>
+    <ul>
+    {{#each players}}
+      <li>{{username}} [role: {{profile.role}}]
+      {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}}
+      {{#if profile.online}}(online){{/if}}</li>
+    {{/each}}
+    </ul>
+</template>
+
+<template name="roleList">
+<ul>
+{{#each roles}}
+	{{> role}}
+{{/each}}
+</ul>
+</template>
+
+<template name="role">
+  <li>{{name}}</li>
+</template>
