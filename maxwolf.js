@@ -94,7 +94,6 @@ if (Meteor.isClient) {
     currentBest = 0;
     for(var userId in v)
     {
-      console.log('looping!');
       if((leader == null && v[userId] > 0 ) || v[userId] > currentBest)
       {
         leader = userId;
@@ -110,12 +109,6 @@ if (Meteor.isServer) {
     Meteor.methods({
       resetGameState: function()
       {
-        /*
-        Meteor.users.update(
-          {}, //todo: filter for users in game
-          {$set: { profile: {alive : true} } }
-         );
-         */
         Meteor.users.find().forEach(function (row) {
           Meteor.users.update(
             {_id: row._id},
