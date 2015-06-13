@@ -84,7 +84,7 @@ if (Meteor.isClient) {
       Meteor.call('castVote', Meteor.userId(), this._id);
     },
     'click .suicide': function(event) {
-      Meteor.call('suicide', Meteor.user());
+      Meteor.call('murder', Meteor.userId(), Meteor.userId());
     },
   })
 
@@ -153,6 +153,8 @@ if (Meteor.isServer) {
 	      } 
 	    }
 	  )
+
+	  Meteor.call('murder', playerIdWithMostVotes(), playerIdWithMostVotes());
 	} else {
 	  Gamestate.update(
 	    {}, 
@@ -172,10 +174,9 @@ if (Meteor.isServer) {
 	  )
 	}
       },
-      suicide: function()
+      murder: function(id)
       {
-	Meteor.users.update( { _id: Meteor.userId() }, {$set: { 'profile': { 'alive': false } } } )
-	console.log('TEST')
+	Meteor.users.update( { _id: id }, {$set: { 'profile.alive': false  } } )
       },
       castVote:function(voteFrom, voteFor)
       {
