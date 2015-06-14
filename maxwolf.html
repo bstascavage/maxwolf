@@ -48,6 +48,15 @@
     <p>You are currently: {{#if currentUser.profile.alive}}alive{{else}}dead{{/if}}</p>
     <p>Your role is: {{currentUser.profile.role}}</p>
   </div>
+  {{#if alertText}}
+  <div class="col-md-4">
+    <div class="alert alert-danger" role="alert">
+      {{alertText.text}}
+    </div>
+  </div>
+  {{/if}}
+</div>
+<div class="row">
   <div class="col-md-6">
     <table class="table player-table">
       <thead>

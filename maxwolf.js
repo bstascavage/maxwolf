@@ -3,6 +3,7 @@ Teams = new Mongo.Collection("teams");
 Players = new Mongo.Collection("players");
 Gamestate = new Mongo.Collection("gamestate");
 Votes = new Mongo.Collection("votes");
+Events = new Mongo.Collection("events");
 
 var GLOBAL_DEBUG = false;
 
@@ -17,6 +18,8 @@ Meteor.startup(function () {
 
 	Gamestate.remove({})
 	Gamestate.insert({ daytime: true, day: 1 });
+  
+  Events.remove({})
   });
 
 /****** Routes ******/
@@ -103,6 +106,9 @@ if (Meteor.isClient) {
     },
     GLOBAL_DEBUG: function(){
       return GLOBAL_DEBUG;
+    },
+    alertText: function(){
+      //return Events.findOne({}, { sort: {createdAt: -1}})
     }
   })
   
@@ -254,7 +260,11 @@ if (Meteor.isServer) {
       },
       murder: function(id)
       {
-	Meteor.users.update( { _id: id }, {$set: { 'profile.alive': false  } } )
+        Meteor.users.update( { _id: id }, {$set: { 'profile.alive': false  } } )
+        Events.insert({
+          text: "A murder happened bro",
+          createdAt: new Date()
+        })
       },
       castVote:function(voteFrom, voteFor, type)
       {
