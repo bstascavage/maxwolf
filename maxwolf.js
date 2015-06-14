@@ -6,6 +6,8 @@ Votes = new Mongo.Collection("votes");
 Events = new Mongo.Collection("events");
 
 var GLOBAL_DEBUG = false;
+var GLOBAL_GAME_DAY_LENGTH = 10; //in seconds
+var GLOBAL_GAME_NIGHT_LENGTH = 5; //in seconds
 
 Meteor.startup(function () {
   Teams.remove({});
@@ -162,8 +164,7 @@ if (Meteor.isClient) {
 
   Template.game.events({
     'click .reset-game-state': function (event) {
-      Meteor.call('resetGameState', function (err, response) {
-      });
+      Meteor.call('resetGameState', function (err, response) {});
     },
     'click .next-game-state': function (event) {
       Meteor.call('nextGameState', function (err, response) {
@@ -183,6 +184,25 @@ if (Meteor.isClient) {
       audio.play();
     },
   })
+
+  Tracker.autorun(function (){
+    console.log('autorunning timer function')
+    if (Gamestate.findOne())
+    {
+      var date = Gamestate.findOne().nextEvent;
+      $('#state-timer').countdown(date, function (event) {
+        $(this).html(event.strftime('%M:%S remaining'));
+      });
+    }
+    
+  });
+  /*
+  var nextEventTime = Gamestate.findOne();
+  nextEventTime.observeChanges({
+    changed: function (id, fields) {
+      console.log(fields);
+    }
+  })*/
 
   function playerIdWithMostVotes(type) {
     var v = [];
@@ -210,6 +230,8 @@ if (Meteor.isServer) {
     Meteor.methods({
       resetGameState: function () {
         online_users = Meteor.users.find({ 'profile.online': true, 'profile.roomId': Meteor.user().profile.roomId }).fetch();
+        console.log('resetting game state');
+
         //fisher-yates shuffle
         for (var i = 0; i < online_users.length - 1; i++) {
           j = getRandomIntBetween(i, online_users.length - 1);
@@ -249,6 +271,8 @@ if (Meteor.isServer) {
         //reset votes
         Votes.remove({})
 
+        startGameCountdown(GLOBAL_GAME_DAY_LENGTH);
+
         return "whatever";
       },
       nextGameState: function () {
@@ -266,6 +290,8 @@ if (Meteor.isServer) {
           Meteor.call('murder', playerIdWithMostVotes('village'), 'Village');
           Votes.remove({ villageType: 'village' })
           checkTeamVictories();
+          console.log('day ending reset countdown');
+          startGameCountdown(GLOBAL_GAME_NIGHT_LENGTH);
         }
         else {
           //NIGHT ENDING
@@ -295,6 +321,8 @@ if (Meteor.isServer) {
             }
           });*/
           checkTeamVictories();
+          console.log('going to call countdwon again');
+          startGameCountdown(GLOBAL_GAME_DAY_LENGTH);
 
           Meteor.call('murder', playerIdWithMostVotes('wolf'), 'Werewolf');
           Votes.remove({ villageType: 'wolf' })
@@ -373,4 +401,30 @@ function checkTeamVictories() {
       )
     }
   });
+}
+
+function startGameCountdown(countdownTime)
+{
+  /*
+  var oldHandle = Gamestate.findOne().timeoutHandle;
+  if (oldHandle)
+  {
+    console.log('clearing old timer');
+    Meteor.clearTimeout(oldHandle)
+  }*/
+  
+  //set up the time for the first day end
+  var date = new Date();
+  date.setSeconds(date.getSeconds() + countdownTime);
+
+  var timeoutHandle = Meteor.setTimeout(function () {
+    Meteor.call('nextGameState');
+  }, countdownTime * 1000)
+  console.log('tiemout handle is ' + timeoutHandle.id);
+  Gamestate.update({}, {
+    $set: {
+      nextEvent: date//,
+      //timeoutHandle: timeoutHandle
+    }
+  })
 }

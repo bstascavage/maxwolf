@@ -1,5 +1,7 @@
 <head>
   <title>maxwolf</title>
+  <script src="/bower_components/jquery/dist/jquery.js"></script>
+  <script src="/bower_components/jquery.countdown/dist/jquery.countdown.js"></script>
 </head>
 
 <body class="container">
@@ -56,7 +58,8 @@
       <button class="next-game-state btn btn-default">Next State</button>
       <button class="suicide btn btn-default">Commit honourable seppuku</button>
       <br />
-      <h3>{{#if daytime}}Day{{else}}Night{{/if}} {{day}}</h3>
+      <h3 id="day-night-header">{{#if daytime}}Day{{else}}Night{{/if}} {{day}}</h3> <div id="state-timer"></div>
+      
       {{#if currentUser.profile.alive}}<h4>You are a {{currentUser.profile.role}} {{#if isWolf}}<img class="wolf-paw-icon" src="./paw2.png" />{{/if}}</h4>{{/if}}
       {{#if isGameOver}}<p>Game Over! The {{winningTeam}} Win!</p>{{/if}}
       {{#unless currentUser.profile.alive}}<h2 style="color:red">you're dead bro</h2>{{/unless}}
