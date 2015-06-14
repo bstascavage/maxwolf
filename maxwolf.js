@@ -240,7 +240,7 @@ if (Meteor.isServer) {
 	} else {
 	  Gamestate.update(
 	    {}, 
-	    {$insertc: 
+	    {$inc: 
 	      { 
 		day: 1 
 	      } 
