@@ -24,14 +24,12 @@ flavor_text = {
             'thrown into a pit of poisonous snakes'
             'thrown into a bear pit'
             'hung upsidedown  '
-            ' by village bukkake'
-            ' by beheading'
-            ' by poisoning'
+            'by village bukkake'
+            'by beheading'
+            'by poisoning'
             'by fored blood transfusion'
-            
-            
-            
-            
+            'crucified'
+            'given a lethal lapjob'
         ],
     "Werewolf" :
         [
@@ -39,32 +37,29 @@ flavor_text = {
             'Throat torn out',
             'ACL torn'
             'crushed'
-            'torn into several gnawed pieces '
+            'torn into several gnawed pieces'
             'eaten'
             'eviscerated'
             'lethally stubbed toe'
-            ' head crushed in'
+            'head crushed in'
             'missing your botton half, dragging yourself towards help'
-            ''
-            
         ],
     "Location" :
         [
-            ' the Church House',
+            'the Church House',
             'the Town Square',
             'the Library'
             'the Well'
             'the Old Jenkins Place'
-            'the Magistrate's office'
-            ' the edge of town'
-            ' the barn where you lost your virginity'
-            ' the place where you felt most safe in the world'
+            'the Magistrate\'s office'
+            'the edge of town'
+            'the barn where you lost your virginity'
+            'the place where you felt most safe in the world'
             'that place mom said to stay away from'
-            ' a grassy knoll'
-            ' a hill down by the river'
-            ' the dog kennel'
+            'a grassy knoll'
+            'a hill down by the river'
+            'the dog kennel'
             'the abandoned mill'
-            ' the spookiest place you can think of'
-            
+            'the spookiest place you can think of'
         ]
 }
