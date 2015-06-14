@@ -7,7 +7,7 @@ flavor_text = {
             'Hung',
             'Killed in a bar fight'
             'drowned'
-            'kicked repeatedly by schoolchildren'
+            'kicked repeatedly by school children'
             'buried alive'
             'thrown off of a high place'
             'buried neck deep and smothered with honey'
@@ -23,7 +23,11 @@ flavor_text = {
             'stripped naked, slathered in cows blood, then given a 10 second head start before the hounds were released'
             'thrown into a pit of poisonous snakes'
             'thrown into a bear pit'
-            'crucified'
+            'hung upsidedown  '
+            ' by village bukkake'
+            ' by beheading'
+            ' by poisoning'
+            'by fored blood transfusion'
             
             
             
@@ -35,34 +39,32 @@ flavor_text = {
             'Throat torn out',
             'ACL torn'
             'crushed'
-            'torn into smithereen'
+            'torn into several gnawed pieces '
             'eaten'
             'eviscerated'
             'lethally stubbed toe'
-            'head crushed in'
+            ' head crushed in'
             'missing your botton half, dragging yourself towards help'
-            'missing your eyes'
-            'without a head'
+            ''
             
         ],
     "Location" :
         [
-            'the Church House',
+            ' the Church House',
             'the Town Square',
             'the Library'
             'the Well'
-            'the ol\' Jenkins Place
-            'the Magistrate\'s office'
-            'the edge of town'
-            'Tommy\' pub'
-            'the barn where you lost your virginity'
-            'the place where you felt most safe in the world'
+            'the Old Jenkins Place'
+            'the Magistrate's office'
+            ' the edge of town'
+            ' the barn where you lost your virginity'
+            ' the place where you felt most safe in the world'
             'that place mom said to stay away from'
-            'a grassy knoll'
-            'a hill down by the river'
-            'the dog kennel'
+            ' a grassy knoll'
+            ' a hill down by the river'
+            ' the dog kennel'
             'the abandoned mill'
-            'the spookiest place you can think of'
+            ' the spookiest place you can think of'
             
         ]
 }
