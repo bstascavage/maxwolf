@@ -184,11 +184,9 @@ if (Meteor.isClient) {
   })
 
   Tracker.autorun(function () {
-    console.log('autorunning timer function')
     if (Meteor.user() && Gamestate.findOne({ _id: Meteor.user().profile.roomId })) {
       var date = Gamestate.findOne({ _id: Meteor.user().profile.roomId }).nextEvent;
       if (date) {
-        console.log('found an event date')
         $('#state-timer').countdown(date, function (event) {
           $(this).html(event.strftime('%M:%S remaining'));
         });
@@ -265,19 +263,20 @@ if (Meteor.isServer) {
               'profile.role': "Villiager",
               'profile.team': "Villiagers"
             }
+          })
         }
         var third = Math.floor(online_users.length / 3);
         for (var i = 0; i < online_users.length; i++) {
           if (i < third) {
             Meteor.users.update({
-            username: online_users[i].username
+              username: online_users[i].username
             }, {
               $set: {
                 'profile.alive': true,
                 'profile.role': "Werewolf",
                 'profile.team': "Werewolves"
               }
-          });
+            });
           }
         }
 
@@ -304,14 +303,17 @@ if (Meteor.isServer) {
 
           Meteor.call('murder', playerIdWithMostVotes('village'), 'Village', roomId);
           Votes.remove({ villageType: 'village' })
-          checkTeamVictories(roomId);
+          var victoryHappened = checkTeamVictories(roomId);
           Gamestate.update({ _id: roomId }, {
             $set: {
               'daytime': false
             }
           })
           console.log('day ending reset countdown');
-          startGameCountdown(GLOBAL_GAME_NIGHT_LENGTH, roomId);
+          if(!victoryHappened)
+          {
+            startGameCountdown(GLOBAL_GAME_NIGHT_LENGTH, roomId);
+          }
         }
         else {
           //Check if a team has fulfilled their victory conditions
@@ -328,9 +330,11 @@ if (Meteor.isServer) {
               )
             }
           });*/
-          checkTeamVictories(roomId);
-          console.log('going to call countdwon again');
-          startGameCountdown(GLOBAL_GAME_DAY_LENGTH, roomId);
+          var victoryHappened = checkTeamVictories(roomId);
+          if(!victoryHappened)
+          {
+            startGameCountdown(GLOBAL_GAME_DAY_LENGTH, roomId);
+          }
 
           Meteor.call('murder', playerIdWithMostVotes('wolf'), 'Werewolf', roomId);
           Votes.remove({ villageType: 'wolf' })
