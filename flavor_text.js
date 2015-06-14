@@ -24,7 +24,6 @@ flavor_text = {
             'Thrown into a pit of poisonous snakes',
             'Thrown into a bear pit',
             'Hung upsidedown',
-            'Bukkake\'d by the villiage to death',
             'Beheaded',
             'Poisoned',
             'Forced blood transfusion',
