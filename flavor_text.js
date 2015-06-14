@@ -4,12 +4,14 @@ flavor_text = {
             'Burned at the stake',
             'Hung',
             'Killed in a bar fight'
+            'Crucified'
         ],
     "Werewolf" :
         [
             'Mauled at midnight',
             'Throat torn out',
             'ACL torn'
+            'Eviscerated'
         ],
     "Location" :
         [
