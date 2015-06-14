@@ -20,7 +20,7 @@ flavor_text = {
             'Church House',
             'Town Square',
             'Library'
-            'The old fishin' hole'
+            'The old fishin hole'
             'The tavern'
             'The brothel'
             'Town limits'
