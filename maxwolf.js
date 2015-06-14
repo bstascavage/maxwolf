@@ -280,12 +280,15 @@ if (Meteor.isServer) {
       },
       murder: function(id, type)
       {
+	victim = Meteor.users.findOne( { _id: id })
+	console.log(victim.profile.alive)
+	if (victim.profile.alive) {
         Events.insert({
           text: "A murder happened bro",
           createdAt: new Date()
         })
         Meteor.users.update( { _id: id }, {$set: { 'profile.alive': false, 'profile.death': getDeath(type), 'profile.death_location': getLocation()  } } )
-      },
+      }},
       castVote:function(voteFrom, voteFor, type)
       {
         Votes.upsert(
