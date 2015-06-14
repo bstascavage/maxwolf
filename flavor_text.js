@@ -12,11 +12,17 @@ flavor_text = {
             'Throat torn out',
             'ACL torn'
             'Eviscerated'
+            'Missing their eyes'
+            'A bloody mess'
         ],
     "Location" :
         [
             'Church House',
             'Town Square',
             'Library'
+            'The old fishin' hole'
+            'The tavern'
+            'The brothel'
+            'Town limits'
         ]
 }
