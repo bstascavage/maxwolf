@@ -12,7 +12,7 @@ flavor_text = {
             'Thrown off of a high place',
             'Buried neck deep and smothered with honey',
             'Stabbed, then kicked, then repeatedly beaten with sticks in the groin',
-            'Locked in a room with a swarm of pissed off bees',
+            'Locked in a cage with a swarm of pissed off bees',
             'Stoned by the children of the village',
             'Force-fed hot coals',
             'Death by snoo-snoo',
@@ -41,7 +41,7 @@ flavor_text = {
             'Talked at by the town gossip until you kill yourself',
             'Had the papal pear shoved up their bum',
             'Buried in a coffin filled with spiders',
-            'Shoved into a barrel and floated downriver',
+            'Shoved into a leaky barrel and floated downriver',
         ],
     "Werewolf" :
         [
@@ -54,14 +54,14 @@ flavor_text = {
             'Eviscerated',
             'Lethally stubbed toe',
             'Head crushed in',
-            'Missing your botton half, dragging yourself towards help',
+            'Missing their botton half, dragging yourself towards help',
             'Found missing their head',
             'Nothing left but their butt',
             'With a trail of bloody paw prints leading away from your house',
             'Roasted over a spit',
             'Strangled with claw marks',
-            'As a feast for carrion birds',
-            'your junk bitten off while you were taking a piss',
+            'Feasted upon by carrion birds',
+            'Their junk bitten off while you were taking a piss',
         ],
     "Location" :
         [
@@ -84,6 +84,5 @@ flavor_text = {
             'a place between two ferns',
             'that place down the road',
             'your basement hangout',
-            'a vat of cheap booze',
         ]
 }
