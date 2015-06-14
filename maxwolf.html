@@ -53,7 +53,7 @@
       <thead>
         <tr>
           <th>Player</th>
-          <th>Role</th>
+          {{#if GLOBAL_DEBUG}}<th>Role</th>{{/if}}
           <th>Actions</th>
           {{#if isWolf}}<th>Werewolf Actions</th>{{/if}}
           <th>Vote Count</th>
@@ -64,7 +64,7 @@
         {{#each alivePlayers}}
           <tr class="{{#unless profile.alive}}dead{{/unless}}">
             <td>{{username}}</td>
-            <td>{{profile.role}}</td>
+            {{#if GLOBAL_DEBUG}}<td>{{profile.role}}</td>{{/if}}
             <td>{{#if currentUser.profile.alive}}<a href="" class="villageVote">vote</a>{{/if}}</td>
             {{#if isWolf}}<td><a href="" class="wolfVote">vote</a></td>{{/if}}
             <td>{{voteCountVillage}}</td>

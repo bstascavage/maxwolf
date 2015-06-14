@@ -4,6 +4,8 @@ Players = new Mongo.Collection("players");
 Gamestate = new Mongo.Collection("gamestate");
 Votes = new Mongo.Collection("votes");
 
+var GLOBAL_DEBUG = false;
+
 Meteor.startup(function () {
   Teams.remove({});
   Teams.insert({name: "Villagers",  team_proportionality: 2});
@@ -96,6 +98,9 @@ if (Meteor.isClient) {
       if (user.role == 'Werewolf' && user.alive) {
         return Meteor.userId()
       }
+    },
+    GLOBAL_DEBUG: function(){
+      return GLOBAL_DEBUG;
     }
   })
   
