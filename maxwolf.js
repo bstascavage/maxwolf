@@ -9,17 +9,17 @@ var GLOBAL_DEBUG = false;
 
 Meteor.startup(function () {
   Teams.remove({});
-  Teams.insert({name: "Villagers",  team_proportionality: 2});
-  Teams.insert({name: "Werewolves", team_proportionality: 1});
+  Teams.insert({name: "Villagers",  team_proportionality: 2, victory: "survive"});
+  Teams.insert({name: "Werewolves", team_proportionality: 1, victory: "majority"});
 
-	Roles.remove({})
+	Roles.remove({});
 	Roles.insert({name: "Villager", team: "Villagers" , is_default_role: true});
 	Roles.insert({name: "Werewolf", team: "Werewolves", is_default_role: true});
 
-	Gamestate.remove({})
-	Gamestate.insert({ daytime: true, day: 1 });
+	Gamestate.remove({});
+	Gamestate.insert({ daytime: true, day: 1, winning_team: null });
   
-  Events.remove({})
+  Events.remove({});
   });
 
 /****** Routes ******/
@@ -100,6 +100,12 @@ if (Meteor.isClient) {
     villageVoteActive: function(){
       return Meteor.user().profile.alive && Gamestate.findOne({}).daytime
     },
+    isGameOver:function(){
+      return Gamestate.findOne({}).winning_team !== null;
+    },
+    winningTeam:function(){
+      return Gamestate.findOne({}).winning_team;
+    },
     isAlive: function(){
       return Meteor.user().profile.alive
     },
@@ -170,19 +176,7 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
     Meteor.methods({
       resetGameState: function()
-      {
-        /*Meteor.users.find().forEach(function (row) {
-          Meteor.users.update(
-            {_id: row._id},
-            {$set:
-              { 
-                'profile.alive' : true,
-                'profile.role' : "Role_Goes_here"
-              }
-            }
-          );
-        });*/
-        
+      {      
         all_users = Meteor.users.find().fetch();
 
         //fisher-yates shuffle
@@ -216,7 +210,8 @@ if (Meteor.isServer) {
         Gamestate.update({},{
           $set:{
             daytime: true,
-            day: 1
+            day: 1,
+            winning_team: null
           }
         })
         //reset votes
@@ -256,6 +251,26 @@ if (Meteor.isServer) {
 	      }
 	    }
 	  )
+
+          //Check if a team has fulfilled their victory conditions
+          //Werewolves, then villagers
+          var alive_wolves = Meteor.users.find({'profile.alive' : true, 'profile.team' : 'Werewolves'}).count();
+          var total_alive = Meteor.users.find({'profile.alive' : true}).count();
+          console.log("alive wolves:" + alive_wolves + " total_alive:" + total_alive + " ratio:" + alive_wolves/total_alive);
+          if (alive_wolves / total_alive >= 0.5){
+            Gamestate.update({}, 
+              {$set: 
+                { 'winning_team': 'Werewolves' }
+              }
+            )
+          } else if (alive_wolves == 0){
+            Gamestate.update({}, 
+              {$set: 
+                { 'winning_team': 'Villagers' }
+              }
+            )
+          }
+
 	  Meteor.call('murder', playerIdWithMostVotes('wolf'), 'Werewolf');
 	  Votes.remove({ villageType: 'wolf'})
 	}
