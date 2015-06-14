@@ -117,8 +117,11 @@ if (Meteor.isClient) {
         return Meteor.userId()
       }
     },
-    isCurrentVoteLeader:function(){
+    isCurrentVillageVoteLeader:function(){
       return this._id == playerIdWithMostVotes('village');
+    },
+    isCurrentWolfVoteLeader:function(){
+      return this._id == playerIdWithMostVotes('wolf');
     },
     GLOBAL_DEBUG: function(){
       return GLOBAL_DEBUG;
