@@ -257,8 +257,8 @@ if (Meteor.isServer) {
 
           //Check if a team has fulfilled their victory conditions
           //Werewolves, then villagers
-          var alive_wolves = Meteor.users.find({'profile.alive' : true, 'profile.team' : 'Werewolves'}).count();
-          var total_alive = Meteor.users.find({'profile.alive' : true}).count();
+          var alive_wolves = Meteor.users.find({'profile.alive' : true, 'profile.online' : true, 'profile.team' : 'Werewolves'}).count();
+          var total_alive = Meteor.users.find({'profile.alive' : true,  'profile.online' : true}).count();
           console.log("alive wolves:" + alive_wolves + " total_alive:" + total_alive + " ratio:" + alive_wolves/total_alive);
           if (alive_wolves / total_alive >= 0.5){
             Gamestate.update({}, 
