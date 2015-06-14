@@ -131,7 +131,7 @@ if (Meteor.isClient) {
       Meteor.call('castVote', Meteor.userId(), this._id, 'wolf');
     },
     'click .suicide': function(event) {
-      Meteor.call('murder', Meteor.userId(), Meteor.userId());
+      Meteor.call('murder', Meteor.userId(), 'suicide');
       var audio = new Audio('239900__thesubber13__scream-1.ogg');
       audio.play();
     },
@@ -236,8 +236,8 @@ if (Meteor.isServer) {
 	    }
 	  )
 
-	  Meteor.call('murder', playerIdWithMostVotes('village'), playerIdWithMostVotes('village'));
-          Meteor.call('murder', playerIdWithMostVotes('wolf'), playerIdWithMostVotes('wolf'));
+	  Meteor.call('murder', playerIdWithMostVotes('village'), 'Village');
+          Meteor.call('murder', playerIdWithMostVotes('wolf'), 'Werewolf');
 	  Votes.remove({})
 	} else {
 	  Gamestate.update(
@@ -258,13 +258,13 @@ if (Meteor.isServer) {
 	  )
 	}
       },
-      murder: function(id)
+      murder: function(id, type)
       {
-        Meteor.users.update( { _id: id }, {$set: { 'profile.alive': false  } } )
         Events.insert({
           text: "A murder happened bro",
           createdAt: new Date()
         })
+        Meteor.users.update( { _id: id }, {$set: { 'profile.alive': false, 'profile.death': getDeath(type), 'profile.death_location': getLocation()  } } )
       },
       castVote:function(voteFrom, voteFor, type)
       {
@@ -290,4 +290,14 @@ if (Meteor.isServer) {
 // Returns a random integer between min and max, inclusive
 function getRandomIntBetween (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getDeath(type) {
+    deaths = flavor_text[type]
+    return deaths[getRandomIntBetween(0, deaths.length - 1)]
+}
+
+function getLocation() {
+    location = flavor_text['Location']
+    return location[getRandomIntBetween(0, deaths.length - 1)]
 }
