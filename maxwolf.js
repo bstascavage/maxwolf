@@ -10,7 +10,7 @@ var GLOBAL_DEBUG = false;
 Meteor.startup(function () {
   Teams.remove({});
   Teams.insert({name: "Villagers",  team_proportionality: 2, victory: "survive"});
-  Teams.insert({name: "Werewolves", team_proportionality: 1, victory: "majority"});
+  Teams.insert({name: "Werewolves", team_proportionality: 1, victory: "outnumber"});
 
 	Roles.remove({});
 	Roles.insert({name: "Villager", team: "Villagers" , is_default_role: true});
