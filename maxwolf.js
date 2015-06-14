@@ -9,8 +9,8 @@ var GLOBAL_DEBUG = false;
 
 Meteor.startup(function () {
   Teams.remove({});
-  Teams.insert({name: "Villagers",  team_proportionality: 2, victory: "survive"});
-  Teams.insert({name: "Werewolves", team_proportionality: 1, victory: "majority"});
+  Teams.insert({name: "Villagers",  team_proportionality: 1, victory: "survive"});
+  Teams.insert({name: "Werewolves", team_proportionality: 2, victory: "outnumber"});
 
 	Roles.remove({});
 	Roles.insert({name: "Villager", team: "Villagers" , is_default_role: true});
@@ -117,14 +117,20 @@ if (Meteor.isClient) {
         return Meteor.userId()
       }
     },
-    isCurrentVoteLeader:function(){
+    isCurrentVillageVoteLeader:function(){
       return this._id == playerIdWithMostVotes('village');
+    },
+    isCurrentWolfVoteLeader:function(){
+      return this._id == playerIdWithMostVotes('wolf');
     },
     GLOBAL_DEBUG: function(){
       return GLOBAL_DEBUG;
     },
     alertText: function(){
       //return Events.findOne({}, { sort: {createdAt: -1}})
+    },
+    playerIsWerewolf: function(){
+      return this.profile.team == 'Werewolves';
     }
   })
   
@@ -237,6 +243,7 @@ if (Meteor.isServer) {
 
 	  Meteor.call('murder', playerIdWithMostVotes('village'), 'Village');
 	  Votes.remove({ villageType: 'village'})
+    checkTeamVictories();
 	} else {
 	  Gamestate.update(
 	    {}, 
@@ -256,23 +263,20 @@ if (Meteor.isServer) {
 	  )
 
           //Check if a team has fulfilled their victory conditions
-          //Werewolves, then villagers
-          var alive_wolves = Meteor.users.find({'profile.alive' : true, 'profile.team' : 'Werewolves'}).count();
-          var total_alive = Meteor.users.find({'profile.alive' : true}).count();
-          console.log("alive wolves:" + alive_wolves + " total_alive:" + total_alive + " ratio:" + alive_wolves/total_alive);
-          if (alive_wolves / total_alive >= 0.5){
-            Gamestate.update({}, 
-              {$set: 
-                { 'winning_team': 'Werewolves' }
-              }
-            )
-          } else if (alive_wolves == 0){
-            Gamestate.update({}, 
-              {$set: 
-                { 'winning_team': 'Villagers' }
-              }
-            )
-          }
+          /*var total_alive = Meteor.users.find({'profile.alive' : true,  'profile.online' : true}).count();
+          
+          Teams.find({}).forEach(function (this_team){
+            var victory = this_team.victory;
+            var teamCount = Meteor.users.find({'profile.alive' : true, 'profile.online' : true, 'profile.team' : this_team.name}).count();
+            if ((victory === "outnumber" && teamCount / total_alive >= 0.5) || (victory === "survive" && teamCount === total_alive)) {
+              Gamestate.update({}, 
+                {$set: 
+                  { 'winning_team': this_team.name }
+                }
+              )
+            }
+          });*/
+    checkTeamVictories();
 
 	  Meteor.call('murder', playerIdWithMostVotes('wolf'), 'Werewolf');
 	  Votes.remove({ villageType: 'wolf'})
@@ -323,4 +327,24 @@ function getDeath(type) {
 function getLocation() {
     location = flavor_text['Location']
     return location[getRandomIntBetween(0, deaths.length - 1)]
+}
+
+function checkTeamVictories(){
+  //Check if a team has fulfilled their victory conditions
+  var total_alive = Meteor.users.find({'profile.alive' : true,  'profile.online' : true}).count();
+  console.log('total_alive: ' + total_alive)
+          
+  Teams.find({}).forEach(function (this_team){
+    var victory = this_team.victory;
+    var teamCount = Meteor.users.find({'profile.alive' : true, 'profile.online' : true, 'profile.team' : this_team.name}).count();
+    console.log("checking the " + this_team.name + " victory condition of " + this_team.victory + " - teamCount: " + teamCount);
+    if ((victory === "outnumber" && teamCount / total_alive >= 0.5) || (victory === "survive" && teamCount === total_alive)) {
+      console.log(this_team.name + " has won!");
+      Gamestate.update({}, 
+        {$set: 
+          { 'winning_team': this_team.name }
+        }
+      )
+    }
+  });
 }
