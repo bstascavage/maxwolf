@@ -80,5 +80,9 @@ flavor_text = {
             'the abandoned mill',
             'the spookiest place you can think of',
             'that one place you thought only you knew about',
+            'a place between two ferns',
+            'that place down the road',
+            'your basement hangout'
+            
         ]
 }
