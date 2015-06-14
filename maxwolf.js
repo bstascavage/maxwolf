@@ -31,6 +31,10 @@ Router.route('/game', function () {
   this.render('game');
 });
 
+Router.route('/rooms', function () {
+  this.render('rooms');
+});
+
 if (Meteor.isClient) {
   Accounts.ui.config({
     passwordSignupFields: "USERNAME_ONLY"
@@ -48,10 +52,11 @@ if (Meteor.isClient) {
   
   Template.startGame.events({
 	  'submit .pickname': function(event) {
-      Router.go('/game');
+      Router.go('/rooms');
       return false;
 	  }
   });
+    
   
   /********* GAME *********/
   Template.game.helpers({

@@ -16,7 +16,7 @@
     <h3>A game about wolves</h3>
     <p>{{> loginButtons}}
       
-      {{#if currentUser}}
+      {{#if currentUser}}       
         {{> startGame}}
       {{/if}}
     </p>
@@ -30,8 +30,11 @@
   <br/><br/>
 	<form class="pickname">
 		<!-- Name: <input type="text" name="username"/> -->
-		<button>Join Game</button>
+		<button>List Rooms</button>
 	</form>
+</template>
+
+<template name="rooms">
 </template>
 
 <template name="game">
