@@ -226,15 +226,14 @@ if (Meteor.isServer) {
       nextGameState: function()
       {
         state = Gamestate.findOne()
-	if (state.daytime) {
-	  Gamestate.update(
-	    {}, 
-	    {$set: 
-	      { 
-		'daytime': false 
-	      } 
-	    }
-	  )
+        if (state.daytime) {
+          Gamestate.update(
+          {},{
+            $set: { 
+            'daytime': false 
+          } 
+        }
+      )
 
 	  Meteor.call('murder', playerIdWithMostVotes('village'), 'Village');
 	  Votes.remove({ villageType: 'village'})
