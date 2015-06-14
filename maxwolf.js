@@ -241,15 +241,17 @@ if (Meteor.isServer) {
         }
 
         //First third of users are werewolves, the rest are villagers
+        //Assign everyone as villagers first to avoid seeing wolves
+        for (var i = 0; i < online_users.length; i++) {
+            tempRole = "Villager";
+            tempTeam = "Villagers";
+        }
         var third = Math.floor(online_users.length / 3);
         for (var i = 0; i < online_users.length; i++) {
           if (i < third) {
             tempRole = "Werewolf";
             tempTeam = "Werewolves";
-          } else {
-            tempRole = "Villager";
-            tempTeam = "Villagers";
-          }
+          } 
           Meteor.users.update({
             username: online_users[i].username
           }, {
