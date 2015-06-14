@@ -83,6 +83,5 @@ flavor_text = {
             'a place between two ferns',
             'that place down the road',
             'your basement hangout'
-            
         ]
 }
