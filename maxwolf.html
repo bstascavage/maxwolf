@@ -72,7 +72,7 @@
           <tr class="{{#unless profile.alive}}dead{{/unless}}">
             <td>{{username}}</td>
             {{#if GLOBAL_DEBUG}}<td>{{profile.role}}</td>{{/if}}
-            <td>{{#if currentUser.profile.alive}}<a href="" class="villageVote">vote</a>{{/if}}</td>
+            <td>{{#if villageVoteActive}}<a href="" class="villageVote">vote</a>{{/if}}</td>
             {{#if isWolf}}<td><a href="" class="wolfVote">vote</a></td>{{/if}}
             <td>{{voteCountVillage}}</td>
             {{#if isWolf}}<td>{{voteCountWolf}}</td>{{/if}}
