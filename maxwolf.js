@@ -387,7 +387,7 @@ function checkTeamVictories() {
   var total_alive = Meteor.users.find({ 'profile.alive': true, 'profile.online': true, 'profile.roomId': Meteor.user().profile.roomId }).count();
   console.log('total_alive: ' + total_alive)
 
-  Teams.find({'profile.roomId': Meteor.user().profile.roomId}).forEach(function (this_team) {
+  Teams.find({}).forEach(function (this_team) {
     var victory = this_team.victory;
     var teamCount = Meteor.users.find({ 'profile.alive': true, 'profile.online': true, 'profile.team': this_team.name, 'profile.roomId': Meteor.user().profile.roomId }).count();
     console.log("checking the " + this_team.name + " victory condition of " + this_team.victory + " - teamCount: " + teamCount);
