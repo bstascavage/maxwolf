@@ -19,7 +19,7 @@ flavor_text = {
             'Impaled professionally',
             'Crushed by several large bolders',
             'Drawn and quartered',
-            'Tared, feathered, and then beaten',
+            'Tarred, feathered, and then beaten',
             'Stripped naked, slathered in cows blood, then given a 10 second head start before the hounds were released',
             'Thrown into a pit of poisonous snakes',
             'Thrown into a bear pit',
@@ -41,6 +41,8 @@ flavor_text = {
             'Had the papal pear shoved up their bum',
             'Buried in a coffin filled with spiders',
             'Shoved into a leaky barrel and floated downriver',
+            'Vivisected',
+            'Thrown into a howling maelstrom of fire',
         ],
     "Werewolf" :
         [
@@ -53,14 +55,15 @@ flavor_text = {
             'Eviscerated',
             'Lethally stubbed toe',
             'Head crushed in',
-            'Missing their botton half, dragging yourself towards help',
+            'Missing their bottom half, dragging themself towards help',
             'Found missing their head',
-            'Nothing left but their butt',
-            'With a trail of bloody paw prints leading away from your house',
+            'Found with nothing left but their butt',
+            'With a trail of bloody paw prints leading away from their house',
             'Roasted over a spit',
             'Strangled with claw marks',
             'Feasted upon by carrion birds',
-            'Their junk bitten off while you were taking a piss',
+            'Their junk bitten off while they were taking a piss',
+            'Bones were shattered',
         ],
     "Location" :
         [
@@ -71,8 +74,8 @@ flavor_text = {
             'the Old Jenkins Place',
             'the Magistrate\'s office',
             'the edge of town',
-            'the barn where you lost your virginity',
-            'the place where you felt most safe in the world',
+            'the barn where they lost their virginity',
+            'the place where they felt most safe in the world',
             'that place mom said to stay away from',
             'a grassy knoll',
             'a hill down by the river',
@@ -83,5 +86,6 @@ flavor_text = {
             'a place between two ferns',
             'that place down the road',
             'your basement hangout',
+            'A jail cell locked from the inside',
         ]
 }
