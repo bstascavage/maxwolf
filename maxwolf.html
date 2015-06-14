@@ -44,6 +44,7 @@
     <br/>
     <h3>{{#if daytime}}Day{{else}}Night{{/if}} {{day}}</h3>
     {{#if currentUser.profile.alive}}<h4>You are a {{currentUser.profile.role}}</h4>{{/if}}
+    {{#if isGameOver}}<p>Game Over! The {{winningTeam}} Win!</p>{{/if}}
     {{#unless currentUser.profile.alive}}<h2 style="color:red">you're dead bro</h2>{{/unless}}
   </div>
   {{#if alertText}}
