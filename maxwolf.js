@@ -131,7 +131,7 @@ if (Meteor.isClient) {
       Meteor.call('castVote', Meteor.userId(), this._id, 'wolf');
     },
     'click .suicide': function(event) {
-      Meteor.call('murder', Meteor.userId(), 'suicide');
+      Meteor.call('murder', Meteor.userId(), 'Suicide');
       var audio = new Audio('239900__thesubber13__scream-1.ogg');
       audio.play();
     },
@@ -232,7 +232,7 @@ if (Meteor.isServer) {
 	  )
 
 	  Meteor.call('murder', playerIdWithMostVotes('village'), 'Village');
-	  Votes.remove({})
+	  Votes.remove({ villageType: 'village'})
 	} else {
 	  Gamestate.update(
 	    {}, 
@@ -251,6 +251,7 @@ if (Meteor.isServer) {
 	    }
 	  )
 	  Meteor.call('murder', playerIdWithMostVotes('wolf'), 'Werewolf');
+	  Votes.remove({ villageType: 'wolf'})
 	}
       },
       murder: function(id, type)
