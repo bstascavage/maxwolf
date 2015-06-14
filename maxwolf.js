@@ -97,14 +97,17 @@ if (Meteor.isClient) {
     daytime: function(){
       return Gamestate.findOne({}).daytime
     },
+    villageVoteActive: function(){
+      return Meteor.user().profile.alive && Gamestate.findOne({}).daytime
+    },
     isGameOver:function(){
       return Gamestate.findOne({}).winning_team !== null;
     },
     winningTeam:function(){
-      return Gamestate.findOne({}).winning_team; 
+      return Gamestate.findOne({}).winning_team;
     },
     isAlive: function(){
-      return currentUser.profile.alive
+      return Meteor.user().profile.alive
     },
     isWolf: function(){
       var user = Meteor.user().profile
