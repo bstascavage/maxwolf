@@ -37,7 +37,8 @@ flavor_text = {
             'left to die in a bear trap',
             'exposed to a lethal dose of bureaucracy',
             'given exactly 1,342 paper cuts',
-            'ground into a paste'
+            'ground into a paste',
+            'talked at by the town gossip until you kill yourself',
         ],
     "Werewolf" :
         [
@@ -50,7 +51,7 @@ flavor_text = {
             'eviscerated',
             'lethally stubbed toe',
             'head crushed in',
-            'missing your botton half, dragging yourself towards help'
+            'missing your botton half, dragging yourself towards help',
         ],
     "Location" :
         [
@@ -69,6 +70,6 @@ flavor_text = {
             'the dog kennel',
             'the abandoned mill',
             'the spookiest place you can think of',
-            'that one place you thought only you knew about'
+            'that one place you thought only you knew about',
         ]
 }
