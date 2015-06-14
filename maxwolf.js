@@ -4,7 +4,6 @@ Players = new Mongo.Collection("players");
 Gamestate = new Mongo.Collection("gamestate");
 Votes = new Mongo.Collection("votes");
 Events = new Mongo.Collection("events");
-Rooms = new Mongo.Collection("rooms");
 
 var GLOBAL_DEBUG = false;
 
@@ -17,8 +16,8 @@ Meteor.startup(function () {
   Roles.insert({ name: "Villager", team: "Villagers", is_default_role: true });
   Roles.insert({ name: "Werewolf", team: "Werewolves", is_default_role: true });
 
-  Gamestate.remove({});
-  Gamestate.insert({ daytime: true, day: 1, winning_team: null });
+  //Gamestate.remove({});
+  //Gamestate.insert({ daytime: true, day: 1, winning_team: null });
 
   Events.remove({});
 });
@@ -62,13 +61,14 @@ if (Meteor.isClient) {
   /********* ROOMS *********/
   Template.rooms.helpers({
     rooms: function () {
-      return Rooms.find({});  
+      return Gamestate.find({});  
     },
   });
 
   Template.rooms.events({
     'submit .createRoom': function (event) {
-      Meteor.call('createRoom');
+      //console.log(event.target.room.value)
+      Meteor.call('createRoom', event.target.room.value);
     },
     'click .joinGame': function (event) {
       Meteor.call('joinGame', this._id);
@@ -83,52 +83,55 @@ if (Meteor.isClient) {
       return Meteor.users.find(
       {
         'profile.alive': true,
-        'profile.online': true
+        'profile.online': true,
+        'profile.roomId': Meteor.user().profile.roomId
       });
     },
     deadPlayers: function () {
       return Meteor.users.find(
       {
         'profile.alive': false,
-        'profile.online': true
+        'profile.online': true,
+        'profile.roomId': Meteor.user().profile.roomId
       });
     },
     hasElements: function (list) {
       return list.count() > 0
     },
     players: function () {
-      return Meteor.users.find({ 'profile.online': true });
+      return Meteor.users.find({ 'profile.online': true, 'profile.roomId': Meteor.user().profile.roomId });
     },
     voteCountVillage: function () {
-      return Votes.find({ votefor: this._id, voteType: 'village' }).count()
+      return Votes.find({ votefor: this._id, voteType: 'village', 'roomId': Meteor.user().profile.roomId }).count()
     },
     voteCountWolf: function () {
-      return Votes.find({ votefor: this._id, voteType: 'wolf' }).count()
+      return Votes.find({ votefor: this._id, voteType: 'wolf', 'roomId': Meteor.user().profile.roomId }).count()
     },
     voteLeader: function () {
       var id = playerIdWithMostVotes('village');
       return id
       if (id) {
         player = Meteor.users.findOne({
-          _id: id
+          _id: id,
+          'profile.roomId': Meteor.user().profile.roomId
         })
         return player.username;
       }
     },
     day: function () {
-      return Gamestate.findOne({}).day
+      return Gamestate.findOne({_id: Meteor.user().profile.roomId}).day
     },
     daytime: function () {
-      return Gamestate.findOne({}).daytime
+      return Gamestate.findOne({_id: Meteor.user().profile.roomId}).daytime
     },
     villageVoteActive: function () {
-      return Meteor.user().profile.alive && Gamestate.findOne({}).daytime
+      return Meteor.user().profile.alive && Gamestate.findOne({_id: Meteor.user().profile.roomId}).daytime
     },
     isGameOver: function () {
-      return Gamestate.findOne({}).winning_team !== null;
+      return Gamestate.findOne({_id: Meteor.user().profile.roomId}).winning_team !== null;
     },
     winningTeam: function () {
-      return Gamestate.findOne({}).winning_team;
+      return Gamestate.findOne({_id: Meteor.user().profile.roomId}).winning_team;
     },
     isAlive: function () {
       return Meteor.user().profile.alive
@@ -186,7 +189,8 @@ if (Meteor.isClient) {
     Meteor.users.find().forEach(function (player) {
       v[player._id.toString()] = Votes.find({
         votefor: player._id,
-        voteType: type
+        voteType: type,
+        'roomId': Meteor.user().profile.roomId
       }).count()
     })
     leader = null;
@@ -205,8 +209,7 @@ if (Meteor.isServer) {
   Meteor.startup(function () {
     Meteor.methods({
       resetGameState: function () {
-        online_users = Meteor.users.find({ 'profile.online': true }).fetch();
-
+        online_users = Meteor.users.find({ 'profile.online': true, 'profile.roomId': Meteor.user().profile.roomId }).fetch();
         //fisher-yates shuffle
         for (var i = 0; i < online_users.length - 1; i++) {
           j = getRandomIntBetween(i, online_users.length - 1);
@@ -249,8 +252,9 @@ if (Meteor.isServer) {
         return "whatever";
       },
       nextGameState: function () {
-        state = Gamestate.findOne()
+        state = Gamestate.findOne({_id: Meteor.user().profile.roomId})
 
+        console.log(state)
         if (state.daytime) {
           //DAY ENDING
           Gamestate.update({}, {
@@ -297,7 +301,8 @@ if (Meteor.isServer) {
         }
       },
       murder: function (id, type) {
-        victim = Meteor.users.findOne({ _id: id })
+        console.log(id + ' is being killed by: ' + type)
+        victim = Meteor.users.findOne({ _id: id, 'profile.roomId': Meteor.user().profile.roomId })
         console.log(victim.profile.alive)
         if (victim.profile.alive) {
           Events.insert({
@@ -307,10 +312,8 @@ if (Meteor.isServer) {
           Meteor.users.update({ _id: id }, { $set: { 'profile.alive': false, 'profile.death': getDeath(type), 'profile.death_location': getLocation() } })
         }
       },
-      createRoom: function () {
-        Rooms.insert({
-          foo: 'bar'   
-        })
+      createRoom: function (name) {
+        Gamestate.insert({ name: name, daytime: true, day: 1, winning_team: null });
       },
       joinGame: function (roomId) {
         Meteor.users.update({ _id: Meteor.userId() }, {$set: { 'profile.roomId': roomId }}) 
@@ -319,12 +322,14 @@ if (Meteor.isServer) {
         Votes.upsert(
         {
           voteFrom: voteFrom,
-          voteType: type
+          voteType: type,
+          roomId: Meteor.user().profile.roomId
         },
         {
           voteFrom: voteFrom,
           votefor: voteFor,
-          voteType: type
+          voteType: type,
+          roomId: Meteor.user().profile.roomId
         })
       },
       tallyVote: function () {
@@ -351,16 +356,16 @@ function getLocation() {
 
 function checkTeamVictories() {
   //Check if a team has fulfilled their victory conditions
-  var total_alive = Meteor.users.find({ 'profile.alive': true, 'profile.online': true }).count();
+  var total_alive = Meteor.users.find({ 'profile.alive': true, 'profile.online': true, 'profile.roomId': Meteor.user().profile.roomId }).count();
   console.log('total_alive: ' + total_alive)
 
-  Teams.find({}).forEach(function (this_team) {
+  Teams.find({'profile.roomId': Meteor.user().profile.roomId}).forEach(function (this_team) {
     var victory = this_team.victory;
-    var teamCount = Meteor.users.find({ 'profile.alive': true, 'profile.online': true, 'profile.team': this_team.name }).count();
+    var teamCount = Meteor.users.find({ 'profile.alive': true, 'profile.online': true, 'profile.team': this_team.name, 'profile.roomId': Meteor.user().profile.roomId }).count();
     console.log("checking the " + this_team.name + " victory condition of " + this_team.victory + " - teamCount: " + teamCount);
     if ((victory === "outnumber" && teamCount / total_alive >= 0.5) || (victory === "survive" && teamCount === total_alive)) {
       console.log(this_team.name + " has won!");
-      Gamestate.update({},
+      Gamestate.update({_id: Meteor.user().profile.roomId },
         {
           $set:
            { 'winning_team': this_team.name }

@@ -39,10 +39,11 @@
   <br />
   <br />
   {{#each rooms}}
-    <li>{{_id}} <a href="" class="joinGame">Join!</a></li>
+    <li>{{name}} <a href="" class="joinGame">Join!</a></li>
   {{/each}}
   <form class="createRoom">
     <!-- Name: <input type="text" name="username"/> -->
+    <input type="text" name="room" placeholder="Room Name" />
     <button>New Room</button>
   </form>
 </template>
