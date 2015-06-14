@@ -262,23 +262,19 @@ if (Meteor.isServer) {
 	  )
 
           //Check if a team has fulfilled their victory conditions
-          //Werewolves, then villagers
-          var alive_wolves = Meteor.users.find({'profile.alive' : true, 'profile.online' : true, 'profile.team' : 'Werewolves'}).count();
           var total_alive = Meteor.users.find({'profile.alive' : true,  'profile.online' : true}).count();
-          console.log("alive wolves:" + alive_wolves + " total_alive:" + total_alive + " ratio:" + alive_wolves/total_alive);
-          if (alive_wolves / total_alive >= 0.5){
-            Gamestate.update({}, 
-              {$set: 
-                { 'winning_team': 'Werewolves' }
-              }
-            )
-          } else if (alive_wolves == 0){
-            Gamestate.update({}, 
-              {$set: 
-                { 'winning_team': 'Villagers' }
-              }
-            )
-          }
+          
+          Teams.find({}).forEach(function (this_team){
+            var victory = this_team.victory;
+            var teamCount = Meteor.users.find({'profile.alive' : true, 'profile.online' : true, 'profile.team' : this_team.name}).count();
+            if ((victory === "outnumber" && teamCount / total_alive >= 0.5) || (victory === "survive" && teamCount === total_alive)) {
+              Gamestate.update({}, 
+                {$set: 
+                  { 'winning_team': this_team.name }
+                }
+              )
+            }
+          });
 
 	  Meteor.call('murder', playerIdWithMostVotes('wolf'), 'Werewolf');
 	  Votes.remove({ villageType: 'wolf'})
