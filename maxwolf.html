@@ -43,10 +43,8 @@
     <button class="suicide btn btn-default">Commit honourable seppuku</button>
     <br/>
     <h3>{{#if daytime}}Day{{else}}Night{{/if}} {{day}}</h3>
-    
-    <p>Your name is: {{currentUser.username}}</p>
-    <p>You are currently: {{#if currentUser.profile.alive}}alive{{else}}dead{{/if}}</p>
-    <p>Your role is: {{currentUser.profile.role}}</p>
+    {{#if currentUser.profile.alive}}<h4>You are a {{currentUser.profile.role}}</h4>{{/if}}
+    {{#unless currentUser.profile.alive}}<h2 style="color:red">you're dead bro</h2>{{/unless}}
   </div>
   {{#if alertText}}
   <div class="col-md-4">
