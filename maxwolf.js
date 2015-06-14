@@ -414,7 +414,7 @@ function startGameCountdown(countdownTime)
   }*/
   
   //set up the time for the first day end
-  var date = new Date();
+  /*var date = new Date();
   date.setSeconds(date.getSeconds() + countdownTime);
 
   var timeoutHandle = Meteor.setTimeout(function () {
@@ -426,5 +426,5 @@ function startGameCountdown(countdownTime)
       nextEvent: date//,
       //timeoutHandle: timeoutHandle
     }
-  })
+  })*/
 }
