@@ -55,20 +55,22 @@ if (Meteor.isClient) {
     alivePlayers: function(){
       return Meteor.users.find(
       {
-        'profile.alive': true 
+        'profile.alive': true,
+        'profile.online': true
       });
     },
     deadPlayers: function(){
       return Meteor.users.find(
       {
-        'profile.alive': false 
+        'profile.alive': false ,
+        'profile.online': true
       });
     },
     hasElements: function(list){
       return list.count() > 0
     },
     players: function(){
-      return Meteor.users.find();
+      return Meteor.users.find({'profile.online':true});
     },
     voteCountVillage: function(){
       return Votes.find({votefor: this._id, voteType: 'village'}).count()
