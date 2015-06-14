@@ -71,7 +71,7 @@
       <tbody>
         {{#each alivePlayers}}
           <tr class="{{#unless profile.alive}}dead{{/unless}}">
-            <td>{{username}}</td>
+            <td>{{username}} {{#if isWolf}}{{#if playerIsWerewolf}}(werewolf){{/if}}{{/if}}</td>
             {{#if GLOBAL_DEBUG}}<td>{{profile.role}}</td>{{/if}}
             <td>{{#if villageVoteActive}}<a href="" class="villageVote">vote</a>{{/if}}</td>
             {{#if isWolf}}<td><a href="" class="wolfVote">vote</a></td>{{/if}}

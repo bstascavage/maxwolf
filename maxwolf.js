@@ -128,6 +128,9 @@ if (Meteor.isClient) {
     },
     alertText: function(){
       //return Events.findOne({}, { sort: {createdAt: -1}})
+    },
+    playerIsWerewolf: function(){
+      return this.profile.team == 'Werewolves';
     }
   })
   
