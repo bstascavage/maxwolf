@@ -23,13 +23,21 @@ flavor_text = {
             'stripped naked, slathered in cows blood, then given a 10 second head start before the hounds were released',
             'thrown into a pit of poisonous snakes',
             'thrown into a bear pit',
-            'hung upsidedown  ',
+            'hung upsidedown',
             'by village bukkake',
             'by beheading',
             'by poisoning',
             'by fored blood transfusion',
             'crucified',
             'given a lethal lapjob'
+            'dissolved in a vat of acid'
+            'organs harvested to pay for new textbooks'
+            'dragged behind a horse'
+            'shipped to leper colony'
+            'left to die in a bear trap'
+            'exposed to a lethal dose of bureaucracy'
+            'given exactly 1,342 paper cuts'
+            'ground into a paste'
         ],
     "Werewolf" :
         [
@@ -61,5 +69,6 @@ flavor_text = {
             'the dog kennel',
             'the abandoned mill',
             'the spookiest place you can think of'
+            'that one place you thought only you knew about'
         ]
 }
