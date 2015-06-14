@@ -187,9 +187,9 @@ if (Meteor.isClient) {
 
   Tracker.autorun(function (){
     console.log('autorunning timer function')
-    if (Gamestate.findOne())
+    if (Gamestate.findOne({_id: Meteor.user().profile.roomId}))
     {
-      var date = Gamestate.findOne().nextEvent;
+      var date = Gamestate.findOne({_id: Meteor.user().profile.roomId}).nextEvent;
       $('#state-timer').countdown(date, function (event) {
         $(this).html(event.strftime('%M:%S remaining'));
       });
@@ -261,7 +261,7 @@ if (Meteor.isServer) {
           });
         }
 
-        Gamestate.update({}, {
+        Gamestate.update({_id: Meteor.user().profile.roomId}, {
           $set: {
             daytime: true,
             day: 1,
@@ -281,31 +281,19 @@ if (Meteor.isServer) {
         console.log(state)
         if (state.daytime) {
           //DAY ENDING
-          Gamestate.update({}, {
-            $set: {
-              'daytime': false
-            }
-          })
 
           Meteor.call('murder', playerIdWithMostVotes('village'), 'Village');
           Votes.remove({ villageType: 'village' })
           checkTeamVictories();
+          Gamestate.update({_id: Meteor.user().profile.roomId}, {
+            $set: {
+              'daytime': false
+            }
+          })
           console.log('day ending reset countdown');
           startGameCountdown(GLOBAL_GAME_NIGHT_LENGTH);
         }
         else {
-          //NIGHT ENDING
-          Gamestate.update({}, {
-            $inc: {
-              day: 1
-            }
-          })
-          Gamestate.update({}, {
-            $set: {
-              'daytime': true
-            }
-          })
-
           //Check if a team has fulfilled their victory conditions
           /*var total_alive = Meteor.users.find({'profile.alive' : true,  'profile.online' : true}).count();
           
@@ -326,6 +314,16 @@ if (Meteor.isServer) {
 
           Meteor.call('murder', playerIdWithMostVotes('wolf'), 'Werewolf');
           Votes.remove({ villageType: 'wolf' })
+          Gamestate.update({_id: Meteor.user().profile.roomId}, {
+            $inc: {
+              day: 1
+            }
+          })
+          Gamestate.update({_id: Meteor.user().profile.roomId}, {
+            $set: {
+              'daytime': true
+            }
+          })
         }
       },
       murder: function (id, type) {
