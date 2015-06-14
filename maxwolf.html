@@ -75,7 +75,7 @@
             {{#if GLOBAL_DEBUG}}<td>{{profile.role}}</td>{{/if}}
             <td>{{#if villageVoteActive}}<a href="" class="villageVote">vote</a>{{/if}}</td>
             {{#if isWolf}}<td><a href="" class="wolfVote">vote</a></td>{{/if}}
-            <td>{{voteCountVillage}} {{#if isCurrentVoteLeader}}*{{/if}}</td>
+            <td>{{voteCountVillage}} {{#if isCurrentVoteLeader}}<span class="glyphicon glyphicon-star" aria-hidden="true"></span>{{/if}}</td>
             {{#if isWolf}}<td>{{voteCountWolf}}</td>{{/if}}
           </tr> 
         {{/each}}
