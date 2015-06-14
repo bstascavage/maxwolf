@@ -61,6 +61,7 @@ flavor_text = {
             'Roasted over a spit',
             'Strangled with claw marks',
             'As a feast for carrion birds',
+            'your junk bitten off while you were taking a piss',
         ],
     "Location" :
         [
@@ -82,6 +83,7 @@ flavor_text = {
             'that one place you thought only you knew about',
             'a place between two ferns',
             'that place down the road',
-            'your basement hangout'
+            'your basement hangout',
+            'a vat of cheap booze',
         ]
 }
