@@ -43,7 +43,7 @@
     <button class="suicide btn btn-default">Commit honourable seppuku</button>
     <br/>
     <h3>{{#if daytime}}Day{{else}}Night{{/if}} {{day}}</h3>
-    {{#if currentUser.profile.alive}}<h4>You are a {{currentUser.profile.role}}</h4>{{/if}}
+    {{#if currentUser.profile.alive}}<h4>You are a {{currentUser.profile.role}} {{#if isWolf}}<img class="wolf-paw-icon" src="./paw2.png"/>{{/if}}</h4>{{/if}}
     {{#if isGameOver}}<p>Game Over! The {{winningTeam}} Win!</p>{{/if}}
     {{#unless currentUser.profile.alive}}<h2 style="color:red">you're dead bro</h2>{{/unless}}
   </div>
@@ -63,20 +63,26 @@
           <th>Player</th>
           {{#if GLOBAL_DEBUG}}<th>Role</th>{{/if}}
           <th>Actions</th>
-          {{#if isWolf}}<th>Werewolf Actions</th>{{/if}}
           <th>Vote Count</th>
-          {{#if isWolf}}<th>Werewolf Vote Count</th>{{/if}}
+          {{#if isWolf}}
+          <th>Werewolf Actions</th>
+          <th>Werewolf Vote Count</th>
+          {{/if}}
         </tr>
       </thead>
       <tbody>
         {{#each alivePlayers}}
           <tr class="{{#unless profile.alive}}dead{{/unless}}">
-            <td>{{username}} {{#if isWolf}}{{#if playerIsWerewolf}}(werewolf){{/if}}{{/if}}</td>
+            <td>{{username}} {{#if isWolf}}{{#if playerIsWerewolf}}<img class="wolf-paw-icon" src="./paw2.png"/>{{/if}}{{/if}}</td>
             {{#if GLOBAL_DEBUG}}<td>{{profile.role}}</td>{{/if}}
             <td>{{#if villageVoteActive}}<a href="" class="villageVote">vote</a>{{/if}}</td>
-            {{#if isWolf}}<td><a href="" class="wolfVote">vote</a></td>{{/if}}
+            
             <td>{{voteCountVillage}} {{#if isCurrentVillageVoteLeader}}<span class="glyphicon glyphicon-star" aria-hidden="true"></span>{{/if}}</td>
-            {{#if isWolf}}<td>{{voteCountWolf}} {{#if isCurrentWolfVoteLeader}}<span class="glyphicon glyphicon-star" aria-hidden="true"></span>{{/if}}</td>{{/if}}
+            
+            {{#if isWolf}}
+            <td><a href="" class="wolfVote">vote</a></td>
+            <td>{{voteCountWolf}} {{#if isCurrentWolfVoteLeader}}<span class="glyphicon glyphicon-star" aria-hidden="true"></span>{{/if}}</td>
+            {{/if}}
           </tr> 
         {{/each}}
       </tbody>

@@ -16,3 +16,10 @@
 .player-table dead{
 background:red;
 }
+
+.wolf-paw-icon{
+  position: relative;
+  padding-left: 2px;
+  bottom: 2px;
+  height: 18px;
+}
