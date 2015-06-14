@@ -256,24 +256,28 @@ if (Meteor.isServer) {
         //First third of users are werewolves, the rest are villagers
         //Assign everyone as villagers first to avoid seeing wolves
         for (var i = 0; i < online_users.length; i++) {
-          tempRole = "Villager";
-          tempTeam = "Villagers";
-        }
-        var third = Math.floor(online_users.length / 3);
-        for (var i = 0; i < online_users.length; i++) {
-          if (i < third) {
-            tempRole = "Werewolf";
-            tempTeam = "Werewolves";
-          }
           Meteor.users.update({
             username: online_users[i].username
           }, {
             $set: {
               'profile.alive': true,
-              'profile.role': tempRole,
-              'profile.team': tempTeam
+              'profile.role': "Villiager",
+              'profile.team': "Villiagers"
             }
+        }
+        var third = Math.floor(online_users.length / 3);
+        for (var i = 0; i < online_users.length; i++) {
+          if (i < third) {
+            Meteor.users.update({
+            username: online_users[i].username
+            }, {
+              $set: {
+                'profile.alive': true,
+                'profile.role': "Werewolf",
+                'profile.team': "Werewolves"
+              }
           });
+          }
         }
 
         Gamestate.update({ _id: Meteor.user().profile.roomId }, {
