@@ -12,3 +12,7 @@
 .jumbotron h3{
   color:white;
 }
+
+.player-table dead{
+background:red;
+}

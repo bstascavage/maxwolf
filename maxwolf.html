@@ -40,7 +40,7 @@
     <h1>You are now playing <i>maxwolf</i></h1>
     <button class="reset-game-state btn btn-default">Reset game</button>
     <button class="next-game-state btn btn-default">Next State</button>
-    <button class="suicide btn btn-default">Kill Yourself</button>
+    <button class="suicide btn btn-default">Commit honourable seppuku</button>
     <br/><br/>
     <p>Your name is: {{currentUser.username}}</p>
     <p>You are currently: {{#if currentUser.profile.alive}}alive{{else}}dead{{/if}}</p>
@@ -52,17 +52,32 @@
       <p>It is currently: nighttime</p>
     {{/if}}
     <p>You are facing the south side of a white house.  There is no door here, and all the windows are barred.</p>
-    <p>player list:</p>
-    <ul>
-
-      {{#each players}}
-        <li>{{username}} [role: {{profile.role}}]
-        {{#if profile.alive}}alive{{/if}} {{#unless profile.alive}}dead{{/unless}}
-        {{#if profile.online}}(online){{/if}} {{#if currentUser.profile.alive}}<a href="" class="villageVote">vote</a>{{/if}} {{voteCount}}
-        </li> 
-      {{/each}}
-
-    </ul>
+  </div>
+  <div class="col-md-6">
+    <table class="table player-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Role</th>
+          <th>Actions</th>
+          {{#if isWolf}}<th>Werewolf Actions</th>{{/if}}
+          <th>Vote Count</th>
+          {{#if isWolf}}<th>Werewolf Vote Count</th>{{/if}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each players}}
+          <tr class="{{#unless profile.alive}}dead{{/unless}}">
+            <td>{{username}}</td>
+            <td>{{profile.role}}</td>
+            <td>{{#if currentUser.profile.alive}}<a href="" class="villageVote">vote</a>{{/if}}</td>
+            {{#if isWolf}}<td><a href="" class="wolfVote">vote</a></td>{{/if}}
+            <td>{{voteCountVillage}}</td>
+            {{#if isWolf}}<td>{{voteCountWolf}}</td>{{/if}}
+          </tr> 
+        {{/each}}
+      </tbody>
+    </table>
     vote leader: {{voteLeader}}
   </div>
 </div>

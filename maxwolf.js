@@ -53,8 +53,11 @@ if (Meteor.isClient) {
     players: function(){
       return Meteor.users.find();
     },
-    voteCount: function(){
-      return Votes.find({votefor: this._id}).count()
+    voteCountVillage: function(){
+      return Votes.find({votefor: this._id, voteType: 'village'}).count()
+    },
+    voteCountWolf: function(){
+      return Votes.find({votefor: this._id, voteType: 'wolf'}).count()
     },
     voteLeader: function(){
       var id = playerIdWithMostVotes('village');
@@ -72,6 +75,13 @@ if (Meteor.isClient) {
     isAlive: function(){
       return currentUser.profile.alive
     },
+    isWolf: function(){
+      var user = Meteor.user().profile
+
+      if (user.role == 'Werewolf' && user.alive) {
+        return Meteor.userId()
+      }
+    }
   })
   
   Template.game.events({
@@ -198,6 +208,7 @@ if (Meteor.isServer) {
 	  )
 
 	  Meteor.call('murder', playerIdWithMostVotes('village'), playerIdWithMostVotes('village'));
+          Meteor.call('murder', playerIdWithMostVotes('wolf'), playerIdWithMostVotes('wolf'));
 	  Votes.remove({})
 	} else {
 	  Gamestate.update(
@@ -227,11 +238,12 @@ if (Meteor.isServer) {
         Votes.upsert(
         {
           voteFrom: voteFrom,
+          voteType: type
         },
         {
           voteFrom: voteFrom,
           votefor: voteFor,
-	  voteType: type
+          voteType: type
         })
       },
       tallyVote:function()
