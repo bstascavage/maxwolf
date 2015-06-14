@@ -112,7 +112,8 @@ if (Meteor.isClient) {
     },
     'click .next-game-state': function(event) {
       Meteor.call('nextGameState',function(err, response) {
-
+      var audio = new Audio('239900__thesubber13__scream-1.ogg');
+      audio.play();
       });
     },
     'click .villageVote': function(event) {
