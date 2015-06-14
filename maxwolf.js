@@ -227,37 +227,31 @@ if (Meteor.isServer) {
       },
       nextGameState: function () {
         state = Gamestate.findOne()
+
         if (state.daytime) {
-          Gamestate.update(
-          {}, {
+          //DAY ENDING
+          Gamestate.update({}, {
             $set: {
               'daytime': false
             }
-          }
-      )
+          })
 
           Meteor.call('murder', playerIdWithMostVotes('village'), 'Village');
           Votes.remove({ villageType: 'village' })
           checkTeamVictories();
-        } else {
-          Gamestate.update(
-            {},
-            {
-              $inc:
-               {
-                 day: 1
-               }
+        }
+        else {
+          //NIGHT ENDING
+          Gamestate.update({}, {
+            $inc: {
+              day: 1
             }
-          )
-          Gamestate.update(
-            {},
-            {
-              $set:
-               {
-                 'daytime': true
-               }
+          })
+          Gamestate.update({}, {
+            $set: {
+              'daytime': true
             }
-          )
+          })
 
           //Check if a team has fulfilled their victory conditions
           /*var total_alive = Meteor.users.find({'profile.alive' : true,  'profile.online' : true}).count();
