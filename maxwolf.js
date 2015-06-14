@@ -9,21 +9,6 @@ var GLOBAL_DEBUG = false;
 var GLOBAL_GAME_DAY_LENGTH = 10; //in seconds
 var GLOBAL_GAME_NIGHT_LENGTH = 5; //in seconds
 
-Meteor.startup(function () {
-  Teams.remove({});
-  Teams.insert({ name: "Villagers", team_proportionality: 1, victory: "survive" });
-  Teams.insert({ name: "Werewolves", team_proportionality: 2, victory: "outnumber" });
-
-  Roles.remove({});
-  Roles.insert({ name: "Villager", team: "Villagers", is_default_role: true });
-  Roles.insert({ name: "Werewolf", team: "Werewolves", is_default_role: true });
-
-  //Gamestate.remove({});
-  //Gamestate.insert({ daytime: true, day: 1, winning_team: null });
-
-  Events.remove({});
-});
-
 /****** Routes ******/
 Router.route('/', function () {
   this.render('Home');
@@ -59,11 +44,11 @@ if (Meteor.isClient) {
     }
   });
 
-    
+
   /********* ROOMS *********/
   Template.rooms.helpers({
     rooms: function () {
-      return Gamestate.find({});  
+      return Gamestate.find({});
     },
   });
 
@@ -78,10 +63,11 @@ if (Meteor.isClient) {
       return false;
     }
   });
-    
+
   /********* GAME *********/
   Template.game.helpers({
     alivePlayers: function () {
+      if (!Meteor.user()) { return; }
       return Meteor.users.find(
       {
         'profile.alive': true,
@@ -90,6 +76,7 @@ if (Meteor.isClient) {
       });
     },
     deadPlayers: function () {
+      if (!Meteor.user()) { return; }
       return Meteor.users.find(
       {
         'profile.alive': false,
@@ -98,15 +85,19 @@ if (Meteor.isClient) {
       });
     },
     hasElements: function (list) {
+      if (!list) { return; }
       return list.count() > 0
     },
     players: function () {
+      if (!Meteor.user()) { return; }
       return Meteor.users.find({ 'profile.online': true, 'profile.roomId': Meteor.user().profile.roomId });
     },
     voteCountVillage: function () {
+      if (!Meteor.user()) { return; }
       return Votes.find({ votefor: this._id, voteType: 'village', 'roomId': Meteor.user().profile.roomId }).count()
     },
     voteCountWolf: function () {
+      if (!Meteor.user()) { return; }
       return Votes.find({ votefor: this._id, voteType: 'wolf', 'roomId': Meteor.user().profile.roomId }).count()
     },
     voteLeader: function () {
@@ -121,24 +112,31 @@ if (Meteor.isClient) {
       }
     },
     day: function () {
-      return Gamestate.findOne({_id: Meteor.user().profile.roomId}).day
+      if (!Meteor.user()) { return; }
+      return Gamestate.findOne({ _id: Meteor.user().profile.roomId }).day
     },
     daytime: function () {
-      return Gamestate.findOne({_id: Meteor.user().profile.roomId}).daytime
+      if (!Meteor.user()) { return; }
+      return Gamestate.findOne({ _id: Meteor.user().profile.roomId }).daytime
     },
     villageVoteActive: function () {
-      return Meteor.user().profile.alive && Gamestate.findOne({_id: Meteor.user().profile.roomId}).daytime
+      if (!Meteor.user()) { return; }
+      return Meteor.user().profile.alive && Gamestate.findOne({ _id: Meteor.user().profile.roomId }).daytime
     },
     isGameOver: function () {
-      return Gamestate.findOne({_id: Meteor.user().profile.roomId}).winning_team !== null;
+      if (!Meteor.user()) { return; }
+      return Gamestate.findOne({ _id: Meteor.user().profile.roomId }).winning_team !== null;
     },
     winningTeam: function () {
-      return Gamestate.findOne({_id: Meteor.user().profile.roomId}).winning_team;
+      if (!Meteor.user()) { return; }
+      return Gamestate.findOne({ _id: Meteor.user().profile.roomId }).winning_team;
     },
     isAlive: function () {
+      if (!Meteor.user()) { return; }
       return Meteor.user().profile.alive
     },
     isWolf: function () {
+      if (!Meteor.user()) { return; }
       var user = Meteor.user().profile
 
       if (user.role == 'Werewolf' && user.alive) {
@@ -164,7 +162,7 @@ if (Meteor.isClient) {
 
   Template.game.events({
     'click .reset-game-state': function (event) {
-      Meteor.call('resetGameState', function (err, response) {});
+      Meteor.call('resetGameState', function (err, response) { });
     },
     'click .next-game-state': function (event) {
       Meteor.call('nextGameState', function (err, response) {
@@ -185,16 +183,17 @@ if (Meteor.isClient) {
     },
   })
 
-  Tracker.autorun(function (){
+  Tracker.autorun(function () {
     console.log('autorunning timer function')
-    if (Gamestate.findOne({_id: Meteor.user().profile.roomId}))
-    {
-      var date = Gamestate.findOne({_id: Meteor.user().profile.roomId}).nextEvent;
-      $('#state-timer').countdown(date, function (event) {
-        $(this).html(event.strftime('%M:%S remaining'));
-      });
+    if (Meteor.user() && Gamestate.findOne({ _id: Meteor.user().profile.roomId })) {
+      var date = Gamestate.findOne({ _id: Meteor.user().profile.roomId }).nextEvent;
+      if (date) {
+        $('#state-timer').countdown(date, function (event) {
+          $(this).html(event.strftime('%M:%S remaining'));
+        });
+      }
     }
-    
+
   });
   /*
   var nextEventTime = Gamestate.findOne();
@@ -227,6 +226,20 @@ if (Meteor.isClient) {
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
+
+    Teams.remove({});
+    Teams.insert({ name: "Villagers", team_proportionality: 1, victory: "survive" });
+    Teams.insert({ name: "Werewolves", team_proportionality: 2, victory: "outnumber" });
+
+    Roles.remove({});
+    Roles.insert({ name: "Villager", team: "Villagers", is_default_role: true });
+    Roles.insert({ name: "Werewolf", team: "Werewolves", is_default_role: true });
+
+    //Gamestate.remove({});
+    //Gamestate.insert({ daytime: true, day: 1, winning_team: null });
+
+    Events.remove({});
+
     Meteor.methods({
       resetGameState: function () {
         online_users = Meteor.users.find({ 'profile.online': true, 'profile.roomId': Meteor.user().profile.roomId }).fetch();
@@ -243,15 +256,15 @@ if (Meteor.isServer) {
         //First third of users are werewolves, the rest are villagers
         //Assign everyone as villagers first to avoid seeing wolves
         for (var i = 0; i < online_users.length; i++) {
-            tempRole = "Villager";
-            tempTeam = "Villagers";
+          tempRole = "Villager";
+          tempTeam = "Villagers";
         }
         var third = Math.floor(online_users.length / 3);
         for (var i = 0; i < online_users.length; i++) {
           if (i < third) {
             tempRole = "Werewolf";
             tempTeam = "Werewolves";
-          } 
+          }
           Meteor.users.update({
             username: online_users[i].username
           }, {
@@ -263,7 +276,7 @@ if (Meteor.isServer) {
           });
         }
 
-        Gamestate.update({_id: Meteor.user().profile.roomId}, {
+        Gamestate.update({ _id: Meteor.user().profile.roomId }, {
           $set: {
             daytime: true,
             day: 1,
@@ -278,7 +291,7 @@ if (Meteor.isServer) {
         return "whatever";
       },
       nextGameState: function () {
-        state = Gamestate.findOne({_id: Meteor.user().profile.roomId})
+        state = Gamestate.findOne({ _id: Meteor.user().profile.roomId })
 
         console.log(state)
         if (state.daytime) {
@@ -287,7 +300,7 @@ if (Meteor.isServer) {
           Meteor.call('murder', playerIdWithMostVotes('village'), 'Village');
           Votes.remove({ villageType: 'village' })
           checkTeamVictories();
-          Gamestate.update({_id: Meteor.user().profile.roomId}, {
+          Gamestate.update({ _id: Meteor.user().profile.roomId }, {
             $set: {
               'daytime': false
             }
@@ -316,12 +329,12 @@ if (Meteor.isServer) {
 
           Meteor.call('murder', playerIdWithMostVotes('wolf'), 'Werewolf');
           Votes.remove({ villageType: 'wolf' })
-          Gamestate.update({_id: Meteor.user().profile.roomId}, {
+          Gamestate.update({ _id: Meteor.user().profile.roomId }, {
             $inc: {
               day: 1
             }
           })
-          Gamestate.update({_id: Meteor.user().profile.roomId}, {
+          Gamestate.update({ _id: Meteor.user().profile.roomId }, {
             $set: {
               'daytime': true
             }
@@ -344,7 +357,7 @@ if (Meteor.isServer) {
         Gamestate.insert({ name: name, daytime: true, day: 1, winning_team: null });
       },
       joinGame: function (roomId) {
-        Meteor.users.update({ _id: Meteor.userId() }, {$set: { 'profile.roomId': roomId }}) 
+        Meteor.users.update({ _id: Meteor.userId() }, { $set: { 'profile.roomId': roomId } })
       },
       castVote: function (voteFrom, voteFor, type) {
         Votes.upsert(
@@ -393,7 +406,7 @@ function checkTeamVictories() {
     console.log("checking the " + this_team.name + " victory condition of " + this_team.victory + " - teamCount: " + teamCount);
     if ((victory === "outnumber" && teamCount / total_alive >= 0.5) || (victory === "survive" && teamCount === total_alive)) {
       console.log(this_team.name + " has won!");
-      Gamestate.update({_id: Meteor.user().profile.roomId },
+      Gamestate.update({ _id: Meteor.user().profile.roomId },
         {
           $set:
            { 'winning_team': this_team.name }
@@ -403,18 +416,18 @@ function checkTeamVictories() {
   });
 }
 
-function startGameCountdown(countdownTime)
-{
+function startGameCountdown(countdownTime) {
   /*
   var oldHandle = Gamestate.findOne().timeoutHandle;
   if (oldHandle)
   {
     console.log('clearing old timer');
     Meteor.clearTimeout(oldHandle)
-  }*/
-  
+  }
+  */
+
   //set up the time for the first day end
-  /*var date = new Date();
+  var date = new Date();
   date.setSeconds(date.getSeconds() + countdownTime);
 
   var timeoutHandle = Meteor.setTimeout(function () {
@@ -426,5 +439,5 @@ function startGameCountdown(countdownTime)
       nextEvent: date//,
       //timeoutHandle: timeoutHandle
     }
-  })*/
+  })
 }
