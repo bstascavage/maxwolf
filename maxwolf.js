@@ -50,6 +50,21 @@ if (Meteor.isClient) {
   
   /********* GAME *********/
   Template.game.helpers({
+    alivePlayers: function(){
+      return Meteor.users.find(
+      {
+        'profile.alive': true 
+      });
+    },
+    deadPlayers: function(){
+      return Meteor.users.find(
+      {
+        'profile.alive': false 
+      });
+    },
+    hasElements: function(list){
+      return list.count() > 0
+    },
     players: function(){
       return Meteor.users.find();
     },

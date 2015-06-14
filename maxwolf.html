@@ -60,7 +60,7 @@
         </tr>
       </thead>
       <tbody>
-        {{#each players}}
+        {{#each alivePlayers}}
           <tr class="{{#unless profile.alive}}dead{{/unless}}">
             <td>{{username}}</td>
             <td>{{profile.role}}</td>
@@ -72,6 +72,20 @@
       </tbody>
     </table>
     vote leader: {{voteLeader}}
+  </div>
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-4">
+  {{#if hasElements deadPlayers}}
+  <div class="graveyard">
+  <h4>town graveyard get fucked losers</h4>
+    <ul>
+      {{#each deadPlayers}}
+        <li>{{username}} - {{profile.role}}</li>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
   </div>
 </div>
 </template>
