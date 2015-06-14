@@ -8,109 +8,113 @@
 </body>
 
 <template name="home">
-<div class="row">
-<div class="col-md-12">
-  <div class="jumbotron">
-    <h1>maxwolf</h1>
-    <br/><br/>
-    <h3>A game about wolves</h3>
-    <p>{{> loginButtons}}
-      
-      {{#if currentUser}}
-        {{> startGame}}
-      {{/if}}
-    </p>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="jumbotron">
+        <h1>maxwolf</h1>
+        <br /><br />
+        <h3>A game about wolves</h3>
+        <p>
+          {{> loginButtons}}
+
+          {{#if currentUser}}
+          {{> startGame}}
+          {{/if}}
+        </p>
+      </div>
+    </div>
+
   </div>
-</div>	
-  
-</div>
 </template>
 
 <template name="startGame">
-  <br/><br/>
-	<form class="pickname">
-		<!-- Name: <input type="text" name="username"/> -->
-		<button>Join Game</button>
-	</form>
+  <br />
+  <br />
+  <form class="pickname">
+    <!-- Name: <input type="text" name="username"/> -->
+    <button>Join Game</button>
+  </form>
 </template>
 
 <template name="game">
-<div class="row">
-  <div class="col-md-12">
-    <h1>You are now playing <i>maxwolf</i></h1>
-    <button class="reset-game-state btn btn-default">Reset game</button>
-    <button class="next-game-state btn btn-default">Next State</button>
-    <button class="suicide btn btn-default">Commit honourable seppuku</button>
-    <br/>
-    <h3>{{#if daytime}}Day{{else}}Night{{/if}} {{day}}</h3>
-    {{#if currentUser.profile.alive}}<h4>You are a {{currentUser.profile.role}} {{#if isWolf}}<img class="wolf-paw-icon" src="./paw2.png"/>{{/if}}</h4>{{/if}}
-    {{#if isGameOver}}<p>Game Over! The {{winningTeam}} Win!</p>{{/if}}
-    {{#unless currentUser.profile.alive}}<h2 style="color:red">you're dead bro</h2>{{/unless}}
-  </div>
-  {{#if alertText}}
-  <div class="col-md-4">
-    <div class="alert alert-danger" role="alert">
-      {{alertText.text}}
+  <div class="row">
+    <div class="col-md-12">
+      <h1>You are now playing <i>maxwolf</i></h1>
+      <button class="reset-game-state btn btn-default">Reset game</button>
+      <button class="next-game-state btn btn-default">Next State</button>
+      <button class="suicide btn btn-default">Commit honourable seppuku</button>
+      <br />
+      <h3>{{#if daytime}}Day{{else}}Night{{/if}} {{day}}</h3>
+      {{#if currentUser.profile.alive}}<h4>You are a {{currentUser.profile.role}} {{#if isWolf}}<img class="wolf-paw-icon" src="./paw2.png" />{{/if}}</h4>{{/if}}
+      {{#if isGameOver}}<p>Game Over! The {{winningTeam}} Win!</p>{{/if}}
+      {{#unless currentUser.profile.alive}}<h2 style="color:red">you're dead bro</h2>{{/unless}}
     </div>
+    {{#if alertText}}
+    <div class="col-md-4">
+      <div class="alert alert-danger" role="alert">
+        {{alertText.text}}
+      </div>
+    </div>
+    {{/if}}
   </div>
-  {{/if}}
-</div>
-<div class="row">
-  <div class="col-md-6">
-    <table class="table player-table">
-      <thead>
-        <tr>
-          <th>Player</th>
-          {{#if GLOBAL_DEBUG}}<th>Role</th>{{/if}}
-          <th>Actions</th>
-          <th>Vote Count</th>
-          {{#if isWolf}}
-          <th>Werewolf Actions</th>
-          <th>Werewolf Vote Count</th>
-          {{/if}}
-        </tr>
-      </thead>
-      <tbody>
-        {{#each alivePlayers}}
+  <div class="row">
+    <div class="col-md-6">
+      <table class="table player-table">
+        <thead>
+          <tr>
+            <th>Player</th>
+            {{#if GLOBAL_DEBUG}}
+            <th>Role</th>{{/if}}
+            <th>Actions</th>
+            <th>Vote Count</th>
+            {{#if isWolf}}
+            <th>Werewolf Actions</th>
+            <th>Werewolf Vote Count</th>
+            {{/if}}
+          </tr>
+        </thead>
+        <tbody>
+          {{#each alivePlayers}}
           <tr class="{{#unless profile.alive}}dead{{/unless}}">
-            <td>{{username}} {{#if isWolf}}{{#if playerIsWerewolf}}<img class="wolf-paw-icon" src="./paw2.png"/>{{/if}}{{/if}}</td>
-            {{#if GLOBAL_DEBUG}}<td>{{profile.role}}</td>{{/if}}
+            <td>{{username}} {{#if isWolf}}{{#if playerIsWerewolf}}<img class="wolf-paw-icon" src="./paw2.png" />{{/if}}{{/if}}</td>
+            {{#if GLOBAL_DEBUG}}
+            <td>{{profile.role}}</td>{{/if}}
             <td>{{#if villageVoteActive}}<a href="" class="villageVote">vote</a>{{/if}}</td>
-            
+
             <td>{{voteCountVillage}} {{#if isCurrentVillageVoteLeader}}<span class="glyphicon glyphicon-star" aria-hidden="true"></span>{{/if}}</td>
-            
+
             {{#if isWolf}}
             <td><a href="" class="wolfVote">vote</a></td>
             <td>{{voteCountWolf}} {{#if isCurrentWolfVoteLeader}}<span class="glyphicon glyphicon-star" aria-hidden="true"></span>{{/if}}</td>
             {{/if}}
-          </tr> 
-        {{/each}}
-      </tbody>
-    </table>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-4">
+      {{#if hasElements deadPlayers}}
+      <div class="graveyard">
+        <h4>town graveyard get fucked losers</h4>
+        <ul>
+          {{#each deadPlayers}}
+          <li><strong>{{username}} - {{profile.role}}</strong>.  Death: {{profile.death}} at {{profile.death_location}}</li>
+          {{/each}}
+        </ul>
+      </div>
+      {{/if}}
+    </div>
   </div>
-  <div class="col-md-2">
-  </div>
-  <div class="col-md-4">
-  {{#if hasElements deadPlayers}}
-  <div class="graveyard">
-  <h4>town graveyard get fucked losers</h4>
-    <ul>
-      {{#each deadPlayers}}
-        <li><strong>{{username}} - {{profile.role}}</strong>.  Death: {{profile.death}} at {{profile.death_location}}</li>
-      {{/each}}
-    </ul>
-  </div>
-  {{/if}}
-  </div>
-</div>
 </template>
 
 <template name="roleList">
-<ul>
-{{#each roles}}
-	{{> role}}
-{{/each}}
-</ul>
+  <ul>
+    {{#each roles}}
+    {{> role}}
+    {{/each}}
+  </ul>
 </template>
 
 <template name="role">
