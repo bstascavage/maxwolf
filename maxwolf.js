@@ -83,10 +83,13 @@ if (Meteor.isClient) {
     },
     voteLeader: function(){
       var id = playerIdWithMostVotes('village');
-      player = Meteor.users.findOne({
-        _id: id
-      })
-      return player.username;
+      if(id)
+      {
+        player = Meteor.users.findOne({
+          _id: id
+        })
+        return player.username;
+      }
     },
     day: function(){
       return Gamestate.findOne({}).day
