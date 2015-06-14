@@ -3,6 +3,7 @@ Teams = new Mongo.Collection("teams");
 Players = new Mongo.Collection("players");
 Gamestate = new Mongo.Collection("gamestate");
 Votes = new Mongo.Collection("votes");
+Events = new Mongo.Collection("events");
 
 var GLOBAL_DEBUG = false;
 
@@ -17,6 +18,8 @@ Meteor.startup(function () {
 
 	Gamestate.remove({})
 	Gamestate.insert({ daytime: true, day: 1 });
+  
+  Events.remove({})
   });
 
 /****** Routes ******/
@@ -103,6 +106,9 @@ if (Meteor.isClient) {
     },
     GLOBAL_DEBUG: function(){
       return GLOBAL_DEBUG;
+    },
+    alertText: function(){
+      //return Events.findOne({}, { sort: {createdAt: -1}})
     }
   })
   
@@ -191,27 +197,22 @@ if (Meteor.isServer) {
             tempRole = "Villager";
             tempTeam = "Villagers";
           }
-          Meteor.users.update(
-              {username: all_users[i].username},
-              {$set:
-                {
-                  'profile.alive' : true,
-                  'profile.role' : tempRole,
-                  'profile.team' : tempTeam
-                }
+          Meteor.users.update({
+            username: all_users[i].username},{
+              $set:{
+                'profile.alive' : true,
+                'profile.role' : tempRole,
+                'profile.team' : tempTeam
               }
-          );
+          });
         }
         
-	Gamestate.update(
-          {},
-          {$set:
-            {
-	      daytime: true,
-              day: 1
-            }
+        Gamestate.update({},{
+          $set:{
+            daytime: true,
+            day: 1
           }
-        )
+        })
         //reset votes
         Votes.remove({})
         
@@ -254,7 +255,11 @@ if (Meteor.isServer) {
       },
       murder: function(id, type)
       {
-	Meteor.users.update( { _id: id }, {$set: { 'profile.alive': false, 'profile.death': getDeath(type), 'profile.death_location': getLocation()  } } )
+        Events.insert({
+          text: "A murder happened bro",
+          createdAt: new Date()
+        })
+        Meteor.users.update( { _id: id }, {$set: { 'profile.alive': false, 'profile.death': getDeath(type), 'profile.death_location': getLocation()  } } )
       },
       castVote:function(voteFrom, voteFor, type)
       {
