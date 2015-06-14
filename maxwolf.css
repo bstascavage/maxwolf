@@ -1,25 +1,24 @@
 /* CSS declarations go here */
-.jumbotron{
-  background-image:url('./yoshi__by_werewolf28081999-d7umjf8.jpg');
-  background-size:100%
+.jumbotron {
+    background-image: url('./yoshi__by_werewolf28081999-d7umjf8.jpg');
+    background-size: 100%;
 }
 
-.jumbotron h1
-{
-  color:white;
+    .jumbotron h1 {
+        color: white;
+    }
+
+    .jumbotron h3 {
+        color: white;
+    }
+
+.player-table dead {
+    background: red;
 }
 
-.jumbotron h3{
-  color:white;
-}
-
-.player-table dead{
-background:red;
-}
-
-.wolf-paw-icon{
-  position: relative;
-  padding-left: 2px;
-  bottom: 2px;
-  height: 18px;
+.wolf-paw-icon {
+    position: relative;
+    padding-left: 2px;
+    bottom: 2px;
+    height: 18px;
 }
