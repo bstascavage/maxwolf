@@ -197,27 +197,22 @@ if (Meteor.isServer) {
             tempRole = "Villager";
             tempTeam = "Villagers";
           }
-          Meteor.users.update(
-              {username: all_users[i].username},
-              {$set:
-                {
-                  'profile.alive' : true,
-                  'profile.role' : tempRole,
-                  'profile.team' : tempTeam
-                }
+          Meteor.users.update({
+            username: all_users[i].username},{
+              $set:{
+                'profile.alive' : true,
+                'profile.role' : tempRole,
+                'profile.team' : tempTeam
               }
-          );
+          });
         }
         
-	Gamestate.update(
-          {},
-          {$set:
-            {
-	      daytime: true,
-              day: 1
-            }
+        Gamestate.update({},{
+          $set:{
+            daytime: true,
+            day: 1
           }
-        )
+        })
         //reset votes
         Votes.remove({})
         
