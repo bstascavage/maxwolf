@@ -83,6 +83,7 @@ if (Meteor.isClient) {
     },
     voteLeader: function(){
       var id = playerIdWithMostVotes('village');
+      return id
       if(id)
       {
         player = Meteor.users.findOne({
@@ -115,6 +116,9 @@ if (Meteor.isClient) {
       if (user.role == 'Werewolf' && user.alive) {
         return Meteor.userId()
       }
+    },
+    isCurrentVoteLeader:function(){
+      return this._id == playerIdWithMostVotes('village');
     },
     GLOBAL_DEBUG: function(){
       return GLOBAL_DEBUG;
