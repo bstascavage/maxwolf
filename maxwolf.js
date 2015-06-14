@@ -326,7 +326,7 @@ function getDeath(type) {
 
 function getLocation() {
     location = flavor_text['Location']
-    return location[getRandomIntBetween(0, deaths.length - 1)]
+    return location[getRandomIntBetween(0, location.length - 1)]
 }
 
 function checkTeamVictories(){
