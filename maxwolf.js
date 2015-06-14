@@ -231,7 +231,6 @@ if (Meteor.isServer) {
 	  )
 
 	  Meteor.call('murder', playerIdWithMostVotes('village'), 'Village');
-          Meteor.call('murder', playerIdWithMostVotes('wolf'), 'Werewolf');
 	  Votes.remove({})
 	} else {
 	  Gamestate.update(
@@ -250,6 +249,7 @@ if (Meteor.isServer) {
 	      }
 	    }
 	  )
+	  Meteor.call('murder', playerIdWithMostVotes('wolf'), 'Werewolf');
 	}
       },
       murder: function(id, type)
