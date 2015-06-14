@@ -177,19 +177,19 @@ if (Meteor.isServer) {
     Meteor.methods({
       resetGameState: function()
       {      
-        all_users = Meteor.users.find().fetch();
+        online_users = Meteor.users.find({'profile.online': true}).fetch();
 
         //fisher-yates shuffle
-        for(var i = 0; i < all_users.length - 1; i++){
-          j = getRandomIntBetween(i,all_users.length-1);
-          temp = all_users[j];
-          all_users[j] = all_users[i];
-          all_users[i] = temp;
+        for(var i = 0; i < online_users.length - 1; i++){
+          j = getRandomIntBetween(i,online_users.length-1);
+          temp = online_users[j];
+          online_users[j] = online_users[i];
+          online_users[i] = temp;
         }
 
         //First third of users are werewolves, the rest are villagers
-        var third = Math.floor(all_users.length / 3);
-        for(var i = 0; i < all_users.length; i++){
+        var third = Math.floor(online_users.length / 3);
+        for(var i = 0; i < online_users.length; i++){
           if (i < third) {
             tempRole = "Werewolf";
             tempTeam = "Werewolves";
@@ -198,7 +198,7 @@ if (Meteor.isServer) {
             tempTeam = "Villagers";
           }
           Meteor.users.update({
-            username: all_users[i].username},{
+            username: online_users[i].username},{
               $set:{
                 'profile.alive' : true,
                 'profile.role' : tempRole,
@@ -237,7 +237,7 @@ if (Meteor.isServer) {
 	} else {
 	  Gamestate.update(
 	    {}, 
-	    {$inc: 
+	    {$insertc: 
 	      { 
 		day: 1 
 	      } 
