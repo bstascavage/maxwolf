@@ -120,6 +120,8 @@ if (Meteor.isClient) {
     },
     'click .suicide': function(event) {
       Meteor.call('murder', Meteor.userId(), Meteor.userId());
+      var audio = new Audio('239900__thesubber13__scream-1.ogg');
+      audio.play();
     },
   })
 
