@@ -83,6 +83,7 @@ if (Meteor.isClient) {
     },
     voteLeader: function(){
       var id = playerIdWithMostVotes('village');
+      return id
       if(id)
       {
         player = Meteor.users.findOne({
@@ -115,6 +116,9 @@ if (Meteor.isClient) {
       if (user.role == 'Werewolf' && user.alive) {
         return Meteor.userId()
       }
+    },
+    isCurrentVoteLeader:function(){
+      return this._id == playerIdWithMostVotes('village');
     },
     GLOBAL_DEBUG: function(){
       return GLOBAL_DEBUG;
@@ -222,15 +226,14 @@ if (Meteor.isServer) {
       nextGameState: function()
       {
         state = Gamestate.findOne()
-	if (state.daytime) {
-	  Gamestate.update(
-	    {}, 
-	    {$set: 
-	      { 
-		'daytime': false 
-	      } 
-	    }
-	  )
+        if (state.daytime) {
+          Gamestate.update(
+          {},{
+            $set: { 
+            'daytime': false 
+          } 
+        }
+      )
 
 	  Meteor.call('murder', playerIdWithMostVotes('village'), 'Village');
 	  Votes.remove({ villageType: 'village'})
