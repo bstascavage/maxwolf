@@ -37,7 +37,7 @@ flavor_text = {
             'Exposed to a lethal dose of bureaucracy',
             'Given exactly 1,342 paper cuts',
             'Ground into a paste',
-            'Talked at by the town gossip until you kill yourself',
+            'Talked at by the town gossip until they killed themself',
             'Had the papal pear shoved up their bum',
             'Buried in a coffin filled with spiders',
             'Shoved into a leaky barrel and floated downriver',
