@@ -4,6 +4,7 @@ Players = new Mongo.Collection("players");
 Gamestate = new Mongo.Collection("gamestate");
 Votes = new Mongo.Collection("votes");
 Events = new Mongo.Collection("events");
+Rooms = new Mongo.Collection("rooms");
 
 var GLOBAL_DEBUG = false;
 
@@ -56,8 +57,22 @@ if (Meteor.isClient) {
       return false;
     }
   });
-  
 
+    
+  /********* ROOMS *********/
+  Template.rooms.helpers({
+    rooms: function () {
+      return Meteor.rooms.find({});  
+    },
+  });
+
+  Template.rooms.events({
+    'submit .pickname': function (event) {
+      Router.go('/rooms');
+      return false;
+    }
+  });
+    
   /********* GAME *********/
   Template.game.helpers({
     alivePlayers: function () {
