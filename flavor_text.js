@@ -40,6 +40,8 @@ flavor_text = {
             'Ground into a paste',
             'Talked at by the town gossip until you kill yourself',
             'Had the papal pear shoved up their bum',
+            'Buried in a coffin filled with spiders',
+            'Shoved into a barrel and floated downriver',
         ],
     "Werewolf" :
         [
@@ -55,6 +57,10 @@ flavor_text = {
             'Missing your botton half, dragging yourself towards help',
             'Found missing their head',
             'Nothing left but their butt',
+            'With a trail of bloody paw prints leading away from your house',
+            'Roasted over a spit',
+            'Strangled with claw marks',
+            'As a feast for carrion birds',
         ],
     "Location" :
         [
