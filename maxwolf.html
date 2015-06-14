@@ -25,7 +25,6 @@
         </p>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -34,7 +33,20 @@
   <br />
   <form class="pickname">
     <!-- Name: <input type="text" name="username"/> -->
-    <button>Join Game</button>
+    <button>List Rooms</button>
+  </form>
+</template>
+  
+<template name="rooms">
+  <br />
+  <br />
+  {{#each rooms}}
+    <li>{{name}} <a href="" class="joinGame">Join!</a></li>
+  {{/each}}
+  <form class="createRoom">
+    <!-- Name: <input type="text" name="username"/> -->
+    <input type="text" name="room" placeholder="Room Name" />
+    <button>New Room</button>
   </form>
 </template>
 
