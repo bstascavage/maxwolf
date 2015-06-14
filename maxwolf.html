@@ -34,14 +34,17 @@
     <button>List Rooms</button>
   </form>
 </template>
-  <br />
-  <br />
-  <form class="pickname">
-    <!-- Name: <input type="text" name="username"/> -->
-    <button>List Rooms</button>
-  </form>
+  
 <template name="rooms">
-    
+  <br />
+  <br />
+  {{#each rooms}}
+    <li>{{_id}} <a href="" class="joinGame">Join!</a></li>
+  {{/each}}
+  <form class="createRoom">
+    <!-- Name: <input type="text" name="username"/> -->
+    <button>New Room</button>
+  </form>
 </template>
 
 <template name="game">

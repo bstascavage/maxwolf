@@ -62,13 +62,17 @@ if (Meteor.isClient) {
   /********* ROOMS *********/
   Template.rooms.helpers({
     rooms: function () {
-      return Meteor.rooms.find({});  
+      return Rooms.find({});  
     },
   });
 
   Template.rooms.events({
-    'submit .pickname': function (event) {
-      Router.go('/rooms');
+    'submit .createRoom': function (event) {
+      Meteor.call('createRoom');
+    },
+    'click .joinGame': function (event) {
+      Meteor.call('joinGame', this._id);
+      Router.go('/game');
       return false;
     }
   });
@@ -156,7 +160,6 @@ if (Meteor.isClient) {
   Template.game.events({
     'click .reset-game-state': function (event) {
       Meteor.call('resetGameState', function (err, response) {
-
       });
     },
     'click .next-game-state': function (event) {
@@ -303,6 +306,14 @@ if (Meteor.isServer) {
           })
           Meteor.users.update({ _id: id }, { $set: { 'profile.alive': false, 'profile.death': getDeath(type), 'profile.death_location': getLocation() } })
         }
+      },
+      createRoom: function () {
+        Rooms.insert({
+          foo: 'bar'   
+        })
+      },
+      joinGame: function (roomId) {
+        Meteor.users.update({ _id: Meteor.userId() }, {$set: { 'profile.roomId': roomId }}) 
       },
       castVote: function (voteFrom, voteFor, type) {
         Votes.upsert(
