@@ -68,11 +68,14 @@ if (Meteor.isClient) {
     players: function(){
       return Meteor.users.find();
     },
-    voteCount: function(){
-      return Votes.find({votefor: this._id}).count()
+    voteCountVillage: function(){
+      return Votes.find({votefor: this._id, voteType: 'village'}).count()
+    },
+    voteCountWolf: function(){
+      return Votes.find({votefor: this._id, voteType: 'wolf'}).count()
     },
     voteLeader: function(){
-      var id = playerIdWithMostVotes();
+      var id = playerIdWithMostVotes('village');
       player = Meteor.users.findOne({
         _id: id
       })
@@ -87,6 +90,13 @@ if (Meteor.isClient) {
     isAlive: function(){
       return currentUser.profile.alive
     },
+    isWolf: function(){
+      var user = Meteor.user().profile
+
+      if (user.role == 'Werewolf' && user.alive) {
+        return Meteor.userId()
+      }
+    }
   })
   
   Template.game.events({
@@ -100,21 +110,26 @@ if (Meteor.isClient) {
 
       });
     },
-    'click .vote': function(event) {
+    'click .villageVote': function(event) {
       console.log(Meteor.userId() + ' is voting for ' + this._id);
-      Meteor.call('castVote', Meteor.userId(), this._id);
+      Meteor.call('castVote', Meteor.userId(), this._id, 'village');
+    },
+    'click .wolfVote': function(event) {
+      console.log(Meteor.userId() + ' is voting for ' + this._id);
+      Meteor.call('castVote', Meteor.userId(), this._id, 'wolf');
     },
     'click .suicide': function(event) {
       Meteor.call('murder', Meteor.userId(), Meteor.userId());
     },
   })
 
-  function playerIdWithMostVotes()
+  function playerIdWithMostVotes(type)
   {
     var v = [];
     Meteor.users.find().forEach(function (player){
       v[player._id.toString()] = Votes.find({
-        votefor: player._id
+        votefor: player._id,
+	voteType: type
       }).count()
     })
     leader = null;
@@ -207,7 +222,8 @@ if (Meteor.isServer) {
 	    }
 	  )
 
-	  Meteor.call('murder', playerIdWithMostVotes(), playerIdWithMostVotes());
+	  Meteor.call('murder', playerIdWithMostVotes('village'), playerIdWithMostVotes('village'));
+          Meteor.call('murder', playerIdWithMostVotes('wolf'), playerIdWithMostVotes('wolf'));
 	  Votes.remove({})
 	} else {
 	  Gamestate.update(
@@ -232,15 +248,17 @@ if (Meteor.isServer) {
       {
 	Meteor.users.update( { _id: id }, {$set: { 'profile.alive': false  } } )
       },
-      castVote:function(voteFrom, voteFor)
+      castVote:function(voteFrom, voteFor, type)
       {
         Votes.upsert(
         {
           voteFrom: voteFrom,
+          voteType: type
         },
         {
           voteFrom: voteFrom,
-          votefor: voteFor
+          votefor: voteFor,
+          voteType: type
         })
       },
       tallyVote:function()

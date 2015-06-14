@@ -46,7 +46,14 @@
     
     <p>Your name is: {{currentUser.username}}</p>
     <p>You are currently: {{#if currentUser.profile.alive}}alive{{else}}dead{{/if}}</p>
-    
+    <p>Your role is: {{currentUser.profile.role}}</p>
+    <p>It is currently day: {{day}}</p>
+    {{#if daytime}}
+      <p>It is currently: daytime</p>
+    {{else}}
+      <p>It is currently: nighttime</p>
+    {{/if}}
+    <p>You are facing the south side of a white house.  There is no door here, and all the windows are barred.</p>
   </div>
   <div class="col-md-6">
     <table class="table player-table">
@@ -55,8 +62,9 @@
           <th>Player</th>
           <th>Role</th>
           <th>Actions</th>
-          <th>Werewolf Actions</th>
+          {{#if isWolf}}<th>Werewolf Actions</th>{{/if}}
           <th>Vote Count</th>
+          {{#if isWolf}}<th>Werewolf Vote Count</th>{{/if}}
         </tr>
       </thead>
       <tbody>
@@ -64,9 +72,10 @@
           <tr class="{{#unless profile.alive}}dead{{/unless}}">
             <td>{{username}}</td>
             <td>{{profile.role}}</td>
-            <td>{{#if currentUser.profile.alive}}<a href="" class="vote">vote</a>{{/if}}</td>
-            <td></td>
-            <td>{{voteCount}}</td>
+            <td>{{#if currentUser.profile.alive}}<a href="" class="villageVote">vote</a>{{/if}}</td>
+            {{#if isWolf}}<td><a href="" class="wolfVote">vote</a></td>{{/if}}
+            <td>{{voteCountVillage}}</td>
+            {{#if isWolf}}<td>{{voteCountWolf}}</td>{{/if}}
           </tr> 
         {{/each}}
       </tbody>
