@@ -260,8 +260,8 @@ if (Meteor.isServer) {
           }, {
             $set: {
               'profile.alive': true,
-              'profile.role': "Villiager",
-              'profile.team': "Villiagers"
+              'profile.role': "Villager",
+              'profile.team': "Villagers"
             }
           })
         }
@@ -407,6 +407,7 @@ function getLocation() {
  * returns true if there was a victory
  */
 function checkTeamVictories(roomId) {
+  console.log('checking team victories for room ' + roomId)
   //Check if a team has fulfilled their victory conditions
   var total_alive = Meteor.users.find({ 'profile.alive': true, 'profile.online': true, 'profile.roomId': roomId }).count();
   console.log('total_alive: ' + total_alive)
@@ -430,15 +431,17 @@ function checkTeamVictories(roomId) {
 }
 
 function startGameCountdown(countdownTime, roomId) {
-  console.log('starting countdown');
   /*
-  var oldHandle = Gamestate.findOne().timeoutHandle;
+  console.log('starting countdown');
+
+  var oldHandle = Gamestate.findOne({ _id: roomId }).timeoutHandle
+  console.log('old handle is:' + oldHandle);
   if (oldHandle)
   {
     console.log('clearing old timer');
     Meteor.clearTimeout(oldHandle)
   }
-  */
+
 
   //set up the time for the first day end
   var date = new Date();
@@ -453,4 +456,16 @@ function startGameCountdown(countdownTime, roomId) {
       //timeoutHandle: timeoutHandle
     }
   })
+  */
+}
+
+function continueGame(roomId)
+{
+  if(Gamestate.findOne({ _id: roomId }).winning_team == null)
+  {
+    Meteor.call('nextGameState', roomId);
+    var timeoutHandle = Meteor.setTimeout(function () {
+      
+    }, countdownTime * 1000)
+  }
 }
