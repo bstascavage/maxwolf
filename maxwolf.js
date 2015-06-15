@@ -165,7 +165,7 @@ if (Meteor.isClient) {
       Meteor.call('resetGameState', Meteor.user().profile.roomId, function (err, response) { });
     },
     'click .next-game-state': function (event) {
-      Meteor.call('nextGameState', Meteor.user().profile.roomId , function (err, response) {
+      Meteor.call('nextGameState', Meteor.user().profile.roomId, function (err, response) {
       });
     },
     'click .villageVote': function (event) {
@@ -177,7 +177,7 @@ if (Meteor.isClient) {
       Meteor.call('castVote', Meteor.userId(), this._id, 'wolf');
     },
     'click .suicide': function (event) {
-      Meteor.call('murder', Meteor.userId(), 'Suicide');
+      Meteor.call('murder', Meteor.userId(), 'Suicide', Meteor.user().profile.roomId);
       var audio = new Audio('239900__thesubber13__scream-1.ogg');
       audio.play();
     },
@@ -203,6 +203,7 @@ if (Meteor.isClient) {
   })*/
 
   function playerIdWithMostVotes(type, roomId) {
+    console.log("Calculating votes of type: " + type + " in room: " + roomId);
     var v = [];
     Meteor.users.find().forEach(function (player) {
       v[player._id.toString()] = Votes.find({
@@ -295,13 +296,13 @@ if (Meteor.isServer) {
         return "whatever";
       },
       nextGameState: function (roomId) {
-        console.log('moving to next game state user: ' + Meteor.user())
+        console.log('moving to next game state user: ' + Meteor.user() + ' in room: ' + roomId)
         state = Gamestate.findOne({ _id: roomId })
 
         if (state.daytime) {
           //DAY ENDING
 
-          Meteor.call('murder', playerIdWithMostVotes('village'), 'Village', roomId);
+          Meteor.call('murder', playerIdWithMostVotes('village', roomId), 'Village', roomId);
           Votes.remove({ villageType: 'village' })
           var victoryHappened = checkTeamVictories(roomId);
           Gamestate.update({ _id: roomId }, {
@@ -336,7 +337,7 @@ if (Meteor.isServer) {
             startGameCountdown(GLOBAL_GAME_DAY_LENGTH, roomId);
           }
 
-          Meteor.call('murder', playerIdWithMostVotes('wolf'), 'Werewolf', roomId);
+          Meteor.call('murder', playerIdWithMostVotes('wolf', roomId), 'Werewolf', roomId);
           Votes.remove({ villageType: 'wolf' })
           Gamestate.update({ _id: roomId }, {
             $inc: {
@@ -350,8 +351,8 @@ if (Meteor.isServer) {
           })
         }
       },
-      murder: function (id, type) {
-        console.log(id + ' is being killed by: ' + type)
+      murder: function (id, type, roomId) {
+        console.log(id + ' is being killed by: ' + type + ' in room: ' + roomId)
         victim = Meteor.users.findOne({ _id: id })
         if (victim && victim.profile.alive) {
           Events.insert({
