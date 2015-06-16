@@ -1,3 +1,5 @@
+//routes.js
+
 /****** Routes ******/
 Router.route('/', function () {
   this.render('Home');

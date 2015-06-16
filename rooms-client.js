@@ -1,7 +1,7 @@
-//Rooms.js
+//room-client.js
 
 if (Meteor.isClient) {
-  /********* ROOMS *********/
+  /********* ROOMS *********/    
   Template.rooms.helpers({
     rooms: function () {
       return Gamestate.find({});
@@ -10,7 +10,6 @@ if (Meteor.isClient) {
 
   Template.rooms.events({
     'submit .createRoom': function (event) {
-      //console.log(event.target.room.value)
       Meteor.call('createRoom', event.target.room.value);
     },
     'click .joinGame': function (event) {

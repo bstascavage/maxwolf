@@ -1,3 +1,5 @@
+//room-server.js
+
 if (Meteor.isServer) {
   Meteor.startup(function () {
         Meteor.methods({
@@ -6,7 +8,7 @@ if (Meteor.isServer) {
           },
           joinGame: function(roomId) {
             Meteor.users.update({ _id: Meteor.userId() }, { $set: { 'profile.roomId': roomId } })
-          }
+          },
       })
   })
 }

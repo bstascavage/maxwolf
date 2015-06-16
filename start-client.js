@@ -1,4 +1,4 @@
-//start.js
+//start-client.js
 
 if (Meteor.isClient) {
   Accounts.ui.config({

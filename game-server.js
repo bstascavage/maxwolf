@@ -1,3 +1,5 @@
+//game-server.js
+
 if (Meteor.isServer) {
   Meteor.startup(function () {
 
