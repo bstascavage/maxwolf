@@ -14,5 +14,6 @@ Router.route('/game', function () {
 
 Router.route('/rooms', function () {
   this.render('rooms');
-  Meteor.call('clearData')
+  Meteor.call('clearData');
+  Meteor.subscribe("gamestateAll");
 });

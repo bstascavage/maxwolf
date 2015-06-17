@@ -7,7 +7,7 @@ if (Meteor.isServer) {
             Gamestate.insert({ name: name, daytime: true, day: 1, winning_team: null });
           },
           joinGame: function(roomId) {
-            Meteor.users.update({ _id: Meteor.userId() }, { $set: { 'profile.roomId': roomId } })
+            Meteor.users.update({ _id: Meteor.userId() }, { $set: { 'profile.roomId': roomId, 'profile.alive': false, 'profile.role': null, 'profile.team': null, 'profile.death': null, 'profile.death_location': null, 'profile.reveal_role': null, 'profile.reveal_team': null } })
           },
           clearData: function () {
             Meteor.users.update({ _id: Meteor.userId() }, { $set: { 'profile.roomId': null, 'profile.alive': false, 'profile.role': null, 'profile.team': null, 'profile.death': null, 'profile.death_location': null, 'profile.reveal_role': null, 'profile.reveal_team': null } })

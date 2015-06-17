@@ -8,6 +8,11 @@ if (Meteor.isServer) {
         return Votes.find({}, {fields: {_id: 1, votefor: 1, voteType: 1, roomId: 1}});  
     });
     Meteor.publish("gamestate", function () {
+        user = Meteor.users.findOne({'_id': this.userId})
+        return Gamestate.find({'_id': user.profile.roomId});  
+    });
+    Meteor.publish("gamestateAll", function () {
+        user = Meteor.users.findOne({'_id': this.userId})
         return Gamestate.find({});  
     });
     Meteor.publish('allUsers', function() {
