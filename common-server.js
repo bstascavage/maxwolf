@@ -13,7 +13,7 @@ if (Meteor.isServer) {
     Meteor.publish('allUsers', function() {
         user = Meteor.users.findOne({'_id': this.userId})
         if (user.profile.team == 'Werewolves') {
-            return Meteor.users.find({'profile.roomId': user.profile.roomId}, {
+            return Meteor.users.find({$and: [{'profile.roomId': user.profile.roomId}, {'profile.online': true}]}, {
                 fields: {
                     _id: 1, 
                     username: 1, 
@@ -27,7 +27,7 @@ if (Meteor.isServer) {
                 }
             });
             } else {
-                return Meteor.users.find({}, {
+                return Meteor.users.find({$and: [{'profile.roomId': user.profile.roomId}, {'profile.online': true}]}, {
                 fields: {
                     _id: 1, 
                     username: 1, 

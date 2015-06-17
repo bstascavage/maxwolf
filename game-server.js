@@ -124,6 +124,27 @@ if (Meteor.isServer) {
           })
         }
       },
+      playerIdWithMostVotes: function (type, roomId) {
+        console.log("Calculating votes of type: " + type + " in room: " + roomId);
+        var v = [];
+        Meteor.users.find().forEach(function (player) {
+          v[player._id.toString()] = Votes.find({
+            votefor: player._id,
+            voteType: type,
+            'roomId': roomId
+          }).count()
+        })
+        leader = null;
+        currentBest = 0;
+        for (var userId in v) {
+          //console.log(userId)
+          if ((leader == null && v[userId] > 0) || v[userId] > currentBest) {
+            leader = userId;
+            currentBest = v[userId]
+          }
+        }
+        return leader;
+      },
       murder: function (id, type, roomId) {
         console.log(id + ' is being killed by: ' + type + ' in room: ' + roomId)
         victim = Meteor.users.findOne({ _id: id })
@@ -238,24 +259,3 @@ function continueGame(roomId)
     }, countdownTime * 1000)
   }
 }
-
-function playerIdWithMostVotes(type, roomId) {
-    console.log("Calculating votes of type: " + type + " in room: " + roomId);
-    var v = [];
-    Meteor.users.find().forEach(function (player) {
-      v[player._id.toString()] = Votes.find({
-        votefor: player._id,
-        voteType: type,
-        'roomId': roomId
-      }).count()
-    })
-    leader = null;
-    currentBest = 0;
-    for (var userId in v) {
-      if ((leader == null && v[userId] > 0) || v[userId] > currentBest) {
-        leader = userId;
-        currentBest = v[userId]
-      }
-    }
-    return leader;
-  }
