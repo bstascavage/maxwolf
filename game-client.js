@@ -45,7 +45,7 @@ if (Meteor.isClient) {
       return Votes.find({ votefor: this._id, voteType: 'wolf', 'roomId': Meteor.user().profile.roomId }).count()
     },
     voteLeader: function () {
-      var id = Meteor.call('playerIdWithMostVotes', 'village', Meteor.user().profile.roomId);
+      var id = playerIdWithMostVotes('village', Meteor.user().profile.roomId);
       return id
       if (id) {
         player = Meteor.users.findOne({
@@ -88,10 +88,10 @@ if (Meteor.isClient) {
       }
     },
     isCurrentVillageVoteLeader: function () {
-      return this._id == Meteor.call('playerIdWithMostVotes', 'village', Meteor.user().profile.roomId);
+      return this._id == playerIdWithMostVotes('village', Meteor.user().profile.roomId);
     },
     isCurrentWolfVoteLeader: function () {
-      return this._id == Meteor.call('playerIdWithMostVotes', 'wolf', Meteor.user().profile.roomId);
+      return this._id == playerIdWithMostVotes('wolf', Meteor.user().profile.roomId);
     },
     GLOBAL_DEBUG: function () {
       return GLOBAL_DEBUG;
@@ -148,3 +148,24 @@ if (Meteor.isClient) {
 }
 
 
+function playerIdWithMostVotes(type, roomId) {
+    console.log("Calculating votes of type: " + type + " in room: " + roomId);
+    var v = [];
+    Meteor.users.find().forEach(function (player) {
+      v[player._id.toString()] = Votes.find({
+        votefor: player._id,
+        voteType: type,
+        'roomId': roomId
+      }).count()
+    })
+    leader = null;
+    currentBest = 0;
+    for (var userId in v) {
+      //console.log(userId)
+      if ((leader == null && v[userId] > 0) || v[userId] > currentBest) {
+        leader = userId;
+        currentBest = v[userId]
+      }
+    }
+    return leader;
+}

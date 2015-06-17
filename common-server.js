@@ -5,7 +5,7 @@ if (Meteor.isServer) {
         return Roles.find({});  
     });
     Meteor.publish("votes", function () {
-        return Votes.find({});  
+        return Votes.find({}, {fields: {_id: 1, votefor: 1, voteType: 1, roomId: 1}});  
     });
     Meteor.publish("gamestate", function () {
         return Gamestate.find({});  
@@ -23,6 +23,7 @@ if (Meteor.isServer) {
                     'profile.idle': 1,
                     'profile.death': 1,
                     'profile.team': 1,
+                    'profile.reveal_role': 1,
                     'profile.death_location': 1
                 }
             });
@@ -36,6 +37,7 @@ if (Meteor.isServer) {
                     'profile.roomId': 1,
                     'profile.idle': 1,
                     'profile.death': 1,
+                    'profile.reveal_role': 1,
                     'profile.death_location': 1
                 }
             });
