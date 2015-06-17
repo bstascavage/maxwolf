@@ -7,8 +7,12 @@ Router.route('/', function () {
 
 Router.route('/game', function () {
   this.render('game');
+  Meteor.subscribe("votes");
+  Meteor.subscribe("gamestate");
+  Meteor.subscribe("allUsers");
 });
 
 Router.route('/rooms', function () {
   this.render('rooms');
+  Meteor.call('clearData')
 });

@@ -9,6 +9,9 @@ if (Meteor.isServer) {
           joinGame: function(roomId) {
             Meteor.users.update({ _id: Meteor.userId() }, { $set: { 'profile.roomId': roomId } })
           },
+          clearData: function () {
+            Meteor.users.update({ _id: Meteor.userId() }, { $set: { 'profile.roomId': null, 'profile.alive': false, 'profile.role': null, 'profile.team': null, 'profile.death': null, 'profile.death_location': null, 'profile.reveal_role': null, 'profile.reveal_team': null } })
+          },
       })
   })
 }
