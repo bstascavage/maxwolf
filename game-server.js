@@ -80,7 +80,8 @@ if (Meteor.isServer) {
           //DAY ENDING
 
           Meteor.call('murder', playerIdWithMostVotes('village', roomId), 'Village', roomId);
-          Votes.remove({ villageType: 'village' })
+          Votes.remove({'villageType': 'village' })
+          
           var victoryHappened = checkTeamVictories(roomId);
           Gamestate.update({ _id: roomId }, {
             $set: {
@@ -115,7 +116,8 @@ if (Meteor.isServer) {
           }
 
           Meteor.call('murder', playerIdWithMostVotes('wolf', roomId), 'Werewolf', roomId);
-          Votes.remove({ villageType: 'wolf' })
+          Votes.remove({'villageType': 'wolf' })
+          
           Gamestate.update({ _id: roomId }, {
             $inc: {
               day: 1
@@ -138,6 +140,7 @@ if (Meteor.isServer) {
           })
           Meteor.users.update({ _id: id }, { $set: { 'profile.alive': false, 'profile.death': getDeath(type), 'profile.death_location': getLocation(), 'profile.reveal_role': victim.profile.role,  'profile.reveal_team': victim.profile.team} })
         }
+        Votes.remove({'voteFrom': id})
       },
       castVote: function (voteFrom, voteFor, type, roomId) {
         Votes.upsert(
